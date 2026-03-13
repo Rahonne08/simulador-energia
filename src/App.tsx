@@ -140,6 +140,10 @@ export default function App() {
 
         </div>
       </main>
+
+      <footer className="max-w-5xl mx-auto px-4 py-8 text-center text-sm font-medium text-slate-500 uppercase tracking-wider">
+        Desenvolvido por Pablo Rahonne
+      </footer>
     </div>
   );
 }
