@@ -49,8 +49,8 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
     <div className="p-6">
       <h2 className="text-xl font-bold text-slate-800 mb-6">Distribuição de Consumo</h2>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 h-[400px] w-full">
+      <div className="flex flex-col md:flex-row gap-8 items-start">
+        <div className="flex-1 h-[400px] w-full min-w-0">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -73,7 +73,7 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 self-start">
+        <div className="w-full md:w-80 lg:w-96 bg-slate-50 p-6 rounded-2xl border border-slate-200 shrink-0">
           <h3 className="text-sm font-semibold text-slate-600 mb-4 uppercase tracking-wider">Maiores Vilões</h3>
           <div className="space-y-4">
             {data.slice(0, 5).map((item, index) => {
