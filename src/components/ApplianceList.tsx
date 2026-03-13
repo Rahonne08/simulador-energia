@@ -160,6 +160,7 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
               <th className="pb-3 font-medium">Qtd</th>
               <th className="pb-3 font-medium">Potência</th>
               <th className="pb-3 font-medium">Uso</th>
+              <th className="pb-3 font-medium">Consumo Diário</th>
               <th className="pb-3 font-medium">Consumo Mensal</th>
               <th className="pb-3 font-medium text-right">Ação</th>
             </tr>
@@ -173,17 +174,22 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
               </tr>
             ) : (
               appliances.map(app => {
-                const consumption = calculateConsumption(app);
+                const monthlyConsumption = calculateConsumption(app);
+                const dailyConsumption = (app.power * app.hoursPerDay * app.quantity) / 1000;
+                
                 return (
                   <tr key={app.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
                     <td className="py-4 font-medium text-slate-800">{app.name}</td>
                     <td className="py-4 text-slate-600">{app.quantity}</td>
                     <td className="py-4 text-slate-600">{app.power} W</td>
                     <td className="py-4 text-slate-600">{app.hoursPerDay}h/dia × {app.daysPerMonth} dias</td>
+                    <td className="py-4 text-slate-600">
+                      {dailyConsumption.toFixed(2)} kWh
+                    </td>
                     <td className="py-4">
                       <div className="flex items-center gap-1.5 text-indigo-700 font-semibold">
                         <Zap className="w-4 h-4" />
-                        {consumption.toFixed(1)} kWh
+                        {monthlyConsumption.toFixed(1)} kWh
                       </div>
                     </td>
                     <td className="py-4 text-right">

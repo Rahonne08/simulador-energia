@@ -1,7 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { Appliance } from '../types';
 import { calculateConsumption } from '../utils';
+import { X, Info } from 'lucide-react';
 
 interface Props {
   appliances: Appliance[];
@@ -11,6 +12,8 @@ interface Props {
 const COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316'];
 
 export default function ConsumptionChart({ appliances, totalConsumption }: Props) {
+  const [selectedApplianceName, setSelectedApplianceName] = useState<string | null>(null);
+
   const data = useMemo(() => {
     return appliances
       .map(app => ({
@@ -47,7 +50,13 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
 
   return (
     <div className="p-6">
-      <h2 className="text-xl font-bold text-slate-800 mb-6">Distribuição de Consumo</h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-slate-800">Distribuição de Consumo</h2>
+        <div className="flex items-center gap-2 text-sm text-slate-500 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
+          <Info className="w-4 h-4" />
+          <span>Clique em uma fatia para ver detalhes</span>
+        </div>
+      </div>
       
       <div className="flex flex-col md:flex-row gap-8 items-start">
         <div className="flex-1 h-[400px] w-full min-w-0">
@@ -64,7 +73,12 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
                 stroke="none"
               >
                 {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={COLORS[index % COLORS.length]} 
+                    onClick={() => setSelectedApplianceName(entry.name)}
+                    className="cursor-pointer hover:opacity-80 transition-opacity outline-none"
+                  />
                 ))}
               </Pie>
               <Tooltip content={<CustomTooltip />} />
@@ -99,6 +113,67 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
           </div>
         </div>
       </div>
+
+      {/* Selected Appliance Details */}
+      {(() => {
+        const selectedAppliance = appliances.find(app => app.name === selectedApplianceName);
+        if (!selectedAppliance) return null;
+
+        const consumption = calculateConsumption(selectedAppliance);
+        const percent = ((consumption / totalConsumption) * 100).toFixed(1);
+        const dailyConsumption = (selectedAppliance.power * selectedAppliance.hoursPerDay * selectedAppliance.quantity) / 1000;
+
+        return (
+          <div className="mt-8 bg-indigo-50/50 border border-indigo-100 rounded-2xl p-6 relative animate-in fade-in slide-in-from-bottom-4 duration-300">
+            <button 
+              onClick={() => setSelectedApplianceName(null)}
+              className="absolute top-4 right-4 p-2 text-indigo-400 hover:text-indigo-600 hover:bg-indigo-100 rounded-full transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <h3 className="text-lg font-bold text-indigo-900 mb-4 flex items-center gap-2">
+              Detalhes: {selectedAppliance.name}
+            </h3>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+              <div className="bg-white p-4 rounded-xl border border-indigo-50 shadow-sm">
+                <p className="text-xs text-slate-500 uppercase font-semibold mb-1 tracking-wider">Quantidade</p>
+                <p className="text-xl font-bold text-slate-800">{selectedAppliance.quantity}</p>
+              </div>
+              <div className="bg-white p-4 rounded-xl border border-indigo-50 shadow-sm">
+                <p className="text-xs text-slate-500 uppercase font-semibold mb-1 tracking-wider">Potência</p>
+                <p className="text-xl font-bold text-slate-800">{selectedAppliance.power} <span className="text-sm font-medium text-slate-500">W</span></p>
+              </div>
+              <div className="bg-white p-4 rounded-xl border border-indigo-50 shadow-sm">
+                <p className="text-xs text-slate-500 uppercase font-semibold mb-1 tracking-wider">Uso Diário</p>
+                <p className="text-xl font-bold text-slate-800">{selectedAppliance.hoursPerDay} <span className="text-sm font-medium text-slate-500">h</span></p>
+              </div>
+              <div className="bg-white p-4 rounded-xl border border-indigo-50 shadow-sm">
+                <p className="text-xs text-slate-500 uppercase font-semibold mb-1 tracking-wider">Dias/Mês</p>
+                <p className="text-xl font-bold text-slate-800">{selectedAppliance.daysPerMonth}</p>
+              </div>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-5 rounded-xl border border-indigo-100 shadow-sm">
+              <div>
+                <p className="text-xs text-slate-500 uppercase font-semibold mb-1 tracking-wider">Consumo Diário</p>
+                <p className="text-lg font-bold text-slate-700">{dailyConsumption.toFixed(2)} <span className="text-sm font-medium text-slate-500">kWh</span></p>
+              </div>
+              <div className="hidden sm:block w-px h-10 bg-slate-200"></div>
+              <div>
+                <p className="text-xs text-slate-500 uppercase font-semibold mb-1 tracking-wider">Consumo Mensal Total</p>
+                <p className="text-2xl font-black text-indigo-600">{consumption.toFixed(1)} <span className="text-base font-bold text-indigo-400">kWh</span></p>
+              </div>
+              <div className="hidden sm:block w-px h-10 bg-slate-200"></div>
+              <div className="sm:text-right">
+                <p className="text-xs text-slate-500 uppercase font-semibold mb-1 tracking-wider">Impacto no Total</p>
+                <p className="text-2xl font-black text-emerald-500">{percent}%</p>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
