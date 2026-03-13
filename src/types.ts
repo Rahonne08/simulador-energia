@@ -13,4 +13,5 @@ export interface BillConfig {
   tariff: number; // R$ per kWh
   flag: TariffFlag;
   isLowIncome: boolean;
+  city: string;
 }

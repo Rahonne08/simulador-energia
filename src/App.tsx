@@ -26,6 +26,7 @@ export default function App() {
     tariff: 0.89,
     flag: 'verde',
     isLowIncome: false,
+    city: 'São Luís',
   });
 
   const totalConsumption = calculateTotalConsumption(appliances);

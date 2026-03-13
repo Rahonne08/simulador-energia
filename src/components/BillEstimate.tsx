@@ -2,14 +2,15 @@ import React from 'react';
 import { Appliance, BillConfig, TariffFlag } from '../types';
 import { TARIFF_FLAGS } from '../constants';
 import { formatCurrency, formatNumber } from '../utils';
-import { Settings, Zap, AlertTriangle } from 'lucide-react';
+import { Settings, Zap, AlertTriangle, MapPin } from 'lucide-react';
+import { MARANHAO_CITIES } from '../data/maranhaoCities';
 
 interface Props {
   appliances: Appliance[];
   billConfig: BillConfig;
   setBillConfig: React.Dispatch<React.SetStateAction<BillConfig>>;
   totalConsumption: number;
-  bill: { base: number; extra: number; total: number; discount: number };
+  bill: { base: number; extra: number; cip: number; total: number; discount: number };
 }
 
 export default function BillEstimate({ appliances, billConfig, setBillConfig, totalConsumption, bill }: Props) {
@@ -29,6 +30,27 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
           <h3 className="text-sm font-semibold text-slate-600 mb-5 uppercase tracking-wider">Tarifa e Bandeira</h3>
           
           <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Cidade (Maranhão)
+              </label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                  <MapPin className="w-4 h-4" />
+                </span>
+                <select
+                  value={billConfig.city}
+                  onChange={e => setBillConfig({ ...billConfig, city: e.target.value })}
+                  className="w-full rounded-xl border-slate-300 border py-3 pl-10 pr-4 text-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-shadow appearance-none bg-white"
+                >
+                  {MARANHAO_CITIES.map(city => (
+                    <option key={city.name} value={city.name}>{city.name}</option>
+                  ))}
+                </select>
+              </div>
+              <p className="text-xs text-slate-500 mt-2">Define o valor da Contribuição de Iluminação Pública (CIP).</p>
+            </div>
+
             <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200">
               <div>
                 <h4 className="font-medium text-slate-800">Cliente Baixa Renda</h4>
@@ -155,6 +177,11 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                 <span className={`font-medium ${bill.extra > 0 ? 'text-yellow-300' : 'text-emerald-300'}`}>
                   {bill.extra > 0 ? '+' : ''}{formatCurrency(bill.extra)}
                 </span>
+              </div>
+
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-indigo-200">Iluminação Pública (CIP)</span>
+                <span className="font-medium text-yellow-300">+{formatCurrency(bill.cip)}</span>
               </div>
             </div>
           </div>
