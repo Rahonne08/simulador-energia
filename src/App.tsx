@@ -24,7 +24,6 @@ export default function App() {
     flag: 'verde',
     isLowIncome: false,
     connectionType: 'monofasico',
-    city: 'Codó',
   });
 
   const totalConsumption = calculateTotalConsumption(appliances);

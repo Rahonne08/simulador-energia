@@ -16,5 +16,4 @@ export interface BillConfig {
   flag: TariffFlag;
   isLowIncome: boolean;
   connectionType: ConnectionType;
-  city: string;
 }

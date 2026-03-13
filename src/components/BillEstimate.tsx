@@ -2,8 +2,7 @@ import React from 'react';
 import { Appliance, BillConfig, TariffFlag } from '../types';
 import { TARIFF_FLAGS } from '../constants';
 import { formatCurrency, formatNumber } from '../utils';
-import { Settings, Zap, AlertTriangle, MapPin } from 'lucide-react';
-import { MARANHAO_CITIES } from '../data/maranhaoCities';
+import { Settings, Zap, AlertTriangle } from 'lucide-react';
 
 interface Props {
   appliances: Appliance[];
@@ -13,7 +12,6 @@ interface Props {
   bill: { 
     base: number; 
     extra: number; 
-    cip: number; 
     icms: number;
     pis: number;
     cofins: number;
@@ -41,27 +39,6 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
           <h3 className="text-sm font-semibold text-slate-600 mb-5 uppercase tracking-wider">Tarifa e Bandeira</h3>
           
           <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Cidade (Maranhão)
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
-                  <MapPin className="w-4 h-4" />
-                </span>
-                <select
-                  value={billConfig.city}
-                  onChange={e => setBillConfig({ ...billConfig, city: e.target.value })}
-                  className="w-full rounded-xl border-slate-300 border py-3 pl-10 pr-4 text-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-shadow appearance-none bg-white"
-                >
-                  {MARANHAO_CITIES.map(city => (
-                    <option key={city.name} value={city.name}>{city.name}</option>
-                  ))}
-                </select>
-              </div>
-              <p className="text-xs text-slate-500 mt-2">Define o valor da Contribuição de Iluminação Pública (CIP).</p>
-            </div>
-
             <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200">
               <div>
                 <h4 className="font-medium text-slate-800">Cliente Baixa Renda</h4>
@@ -211,7 +188,7 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
 
               <div className="flex justify-between items-center text-sm">
                 <span className="text-indigo-200">
-                  Custo Base ({billConfig.isLowIncome ? 'R$ 0,74' : formatCurrency(billConfig.tariff)}/kWh)
+                  Custo Base ({formatCurrency(billConfig.tariff)}/kWh)
                 </span>
                 <span className="font-medium">{formatCurrency(bill.base)}</span>
               </div>
@@ -227,6 +204,7 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
               </div>
 
               <div className="pt-3 mt-3 border-t border-indigo-500/30 space-y-2">
+                <p className="text-xs text-indigo-300 font-medium uppercase tracking-wider mb-2">Tributos</p>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-indigo-200">ICMS (23%)</span>
                   <span className="font-medium text-red-300">+{formatCurrency(bill.icms)}</span>
@@ -240,16 +218,11 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                   <span className="font-medium text-red-300">+{formatCurrency(bill.cofins)}</span>
                 </div>
               </div>
-
-              <div className="flex justify-between items-center text-sm pt-3 mt-3 border-t border-indigo-500/30">
-                <span className="text-indigo-200">Iluminação Pública (CIP)</span>
-                <span className="font-medium text-yellow-300">+{formatCurrency(bill.cip)}</span>
-              </div>
             </div>
           </div>
           
           <p className="text-xs text-slate-400 text-center mt-4 px-4">
-            * Esta é uma estimativa baseada no consumo dos aparelhos informados. O valor real da conta inclui os impostos calculados acima e taxas de iluminação pública que variam por município.
+            * O valor estimado é calculado como: (Consumo Faturado × Tarifa) + Tributos (ICMS, PIS e COFINS).
           </p>
         </div>
       </div>

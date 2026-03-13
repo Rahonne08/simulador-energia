@@ -1,6 +1,5 @@
 import { Appliance, BillConfig } from './types';
 import { TARIFF_FLAGS } from './constants';
-import { MARANHAO_CITIES } from './data/maranhaoCities';
 
 export const calculateConsumption = (appliance: Appliance): number => {
   return (appliance.power * appliance.hoursPerDay * appliance.daysPerMonth * appliance.quantity) / 1000;
@@ -13,7 +12,6 @@ export const calculateTotalConsumption = (appliances: Appliance[]): number => {
 export const calculateBill = (totalConsumption: number, config: BillConfig): { 
   base: number; 
   extra: number; 
-  cip: number; 
   icms: number;
   pis: number;
   cofins: number;
@@ -68,34 +66,6 @@ export const calculateBill = (totalConsumption: number, config: BillConfig): {
   
   discount += extraDiscount;
   
-  const cityData = MARANHAO_CITIES.find(c => c.name === config.city);
-  let cip = cityData ? cityData.cipValue : 15.00;
-
-  // Codó CIP calculation based on the new law
-  if (config.city === 'Codó') {
-    // Assuming Residential class for the simulator
-    if (totalConsumption <= 100) cip = 0.00;
-    else if (totalConsumption <= 120) cip = 19.05;
-    else if (totalConsumption <= 140) cip = 20.35;
-    else if (totalConsumption <= 180) cip = 24.02; // Assuming 141-180 based on the table gap
-    else if (totalConsumption <= 220) cip = 37.82;
-    else if (totalConsumption <= 270) cip = 49.37;
-    else if (totalConsumption <= 320) cip = 55.87;
-    else if (totalConsumption <= 370) cip = 58.30;
-    else if (totalConsumption <= 420) cip = 65.50;
-    else if (totalConsumption <= 500) cip = 70.20;
-    else if (totalConsumption <= 600) cip = 101.12;
-    else if (totalConsumption <= 700) cip = 111.82;
-    else if (totalConsumption <= 800) cip = 120.50;
-    else if (totalConsumption <= 900) cip = 128.90;
-    else if (totalConsumption <= 1000) cip = 135.60;
-    else if (totalConsumption <= 1250) cip = 192.52;
-    else if (totalConsumption <= 1500) cip = 202.60;
-    else if (totalConsumption <= 2000) cip = 212.90;
-    else if (totalConsumption <= 3000) cip = 263.24;
-    else cip = 263.24; // Fallback for > 3000
-  }
-  
   // Tax calculation (Cálculo por dentro)
   const taxBase = base + extra;
   const icmsRate = 0.23;
@@ -115,12 +85,11 @@ export const calculateBill = (totalConsumption: number, config: BillConfig): {
   return {
     base,
     extra,
-    cip,
     icms,
     pis,
     cofins,
     totalTaxes,
-    total: taxBase + totalTaxes + cip,
+    total: taxBase + totalTaxes,
     discount,
     billedConsumption
   };

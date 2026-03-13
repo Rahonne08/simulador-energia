@@ -56,8 +56,7 @@ export const QuickEstimate = () => {
       tariff: 0.84318,
       flag: 'verde',
       isLowIncome: false,
-      connectionType: 'monofasico',
-      city: 'Codó' // Defaulting to Codó to include the new CIP table
+      connectionType: 'monofasico'
     });
     
     return { kwh, bill };
@@ -100,7 +99,7 @@ export const QuickEstimate = () => {
             </div>
             
             <p className="text-xs text-indigo-200 mt-6 opacity-80">
-              * Cálculo baseado em médias nacionais (R$ 0,84/kWh). Para um valor exato, use o Simulador Completo.
+              * Cálculo baseado na tarifa de R$ 0,84318/kWh. Para um valor exato, use o Simulador Completo.
             </p>
           </div>
         </div>
