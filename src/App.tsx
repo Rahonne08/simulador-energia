@@ -25,6 +25,7 @@ export default function App() {
   const [billConfig, setBillConfig] = useState<BillConfig>({
     tariff: 0.89,
     flag: 'verde',
+    isLowIncome: false,
   });
 
   const totalConsumption = calculateTotalConsumption(appliances);
@@ -55,11 +56,16 @@ export default function App() {
           
           {/* Sidebar Navigation */}
           <div className="lg:col-span-3">
-            <nav className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-4 lg:pb-0 hide-scrollbar">
+            <nav 
+              className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-4 lg:pb-0 hide-scrollbar"
+              aria-label="Navegação principal"
+            >
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as Tab)}
+                  aria-label={`Aba ${tab.label}`}
+                  aria-current={activeTab === tab.id ? 'page' : undefined}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors whitespace-nowrap ${
                     activeTab === tab.id
                       ? 'bg-indigo-100 text-indigo-700 font-medium'
@@ -96,6 +102,7 @@ export default function App() {
             <div className="mt-4 hidden lg:block">
               <button
                 onClick={() => setActiveTab('rapido')}
+                aria-label="Acessar Estimativa Rápida"
                 className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl font-medium transition-colors shadow-sm"
               >
                 <TrendingDown className="w-5 h-5" />

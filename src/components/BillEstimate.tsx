@@ -9,7 +9,7 @@ interface Props {
   billConfig: BillConfig;
   setBillConfig: React.Dispatch<React.SetStateAction<BillConfig>>;
   totalConsumption: number;
-  bill: { base: number; extra: number; total: number };
+  bill: { base: number; extra: number; total: number; discount: number };
 }
 
 export default function BillEstimate({ appliances, billConfig, setBillConfig, totalConsumption, bill }: Props) {
@@ -29,22 +29,49 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
           <h3 className="text-sm font-semibold text-slate-600 mb-5 uppercase tracking-wider">Tarifa e Bandeira</h3>
           
           <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Tarifa de Energia (R$/kWh)
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">R$</span>
-                <input 
-                  type="number" 
-                  step="0.01"
-                  value={billConfig.tariff}
-                  onChange={e => setBillConfig({ ...billConfig, tariff: Number(e.target.value) })}
-                  className="w-full rounded-xl border-slate-300 border py-3 pl-10 pr-4 text-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-shadow"
-                />
+            <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200">
+              <div>
+                <h4 className="font-medium text-slate-800">Cliente Baixa Renda</h4>
+                <p className="text-xs text-slate-500 mt-1">Tarifa Social (até 80 kWh grátis)</p>
               </div>
-              <p className="text-xs text-slate-500 mt-2">Valor cobrado pela distribuidora por cada kWh consumido.</p>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  className="sr-only peer" 
+                  checked={billConfig.isLowIncome}
+                  onChange={(e) => setBillConfig({ ...billConfig, isLowIncome: e.target.checked })}
+                  aria-label="Ativar Tarifa Social para Cliente Baixa Renda"
+                />
+                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+              </label>
             </div>
+
+            {!billConfig.isLowIncome && (
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Tarifa de Energia (R$/kWh)
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">R$</span>
+                  <input 
+                    type="number" 
+                    step="0.01"
+                    value={billConfig.tariff}
+                    onChange={e => setBillConfig({ ...billConfig, tariff: Number(e.target.value) })}
+                    className="w-full rounded-xl border-slate-300 border py-3 pl-10 pr-4 text-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-shadow"
+                  />
+                </div>
+                <p className="text-xs text-slate-500 mt-2">Valor cobrado pela distribuidora por cada kWh consumido.</p>
+              </div>
+            )}
+
+            {billConfig.isLowIncome && (
+              <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                <p className="text-sm text-emerald-800">
+                  <strong>Regra Tarifa Social:</strong> Os primeiros 80 kWh são gratuitos. O consumo acima de 80 kWh será cobrado a <strong>R$ 0,74/kWh</strong>.
+                </p>
+              </div>
+            )}
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -106,8 +133,17 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                 </span>
               </div>
               
+              {billConfig.isLowIncome && (
+                <div className="flex justify-between items-center text-sm text-emerald-300">
+                  <span>Desconto Tarifa Social</span>
+                  <span className="font-medium">- {formatCurrency(bill.discount)}</span>
+                </div>
+              )}
+
               <div className="flex justify-between items-center text-sm">
-                <span className="text-indigo-200">Custo Base ({formatCurrency(billConfig.tariff)}/kWh)</span>
+                <span className="text-indigo-200">
+                  Custo Base ({billConfig.isLowIncome ? 'R$ 0,74' : formatCurrency(billConfig.tariff)}/kWh)
+                </span>
                 <span className="font-medium">{formatCurrency(bill.base)}</span>
               </div>
               
