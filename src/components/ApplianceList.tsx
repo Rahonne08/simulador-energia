@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, Zap } from 'lucide-react';
+import { Plus, Trash2, Zap, Scale, X } from 'lucide-react';
 import { Appliance } from '../types';
 import { COMMON_APPLIANCES } from '../constants';
 import { calculateConsumption } from '../utils';
@@ -17,6 +17,10 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
     hoursPerDay: 0,
     daysPerMonth: 30,
   });
+
+  const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
+  const [compareApp1, setCompareApp1] = useState<string>(COMMON_APPLIANCES[0].name);
+  const [compareApp2, setCompareApp2] = useState<string>(COMMON_APPLIANCES[1].name);
 
   const handleAdd = () => {
     if (!newAppliance.name || !newAppliance.power || !newAppliance.hoursPerDay) return;
@@ -50,10 +54,19 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-slate-800">Seus Aparelhos</h2>
-        <span className="bg-indigo-100 text-indigo-700 py-1 px-3 rounded-full text-sm font-medium">
-          {appliances.length} aparelhos
-        </span>
+        <div className="flex items-center gap-4">
+          <h2 className="text-xl font-bold text-slate-800">Seus Aparelhos</h2>
+          <span className="bg-indigo-100 text-indigo-700 py-1 px-3 rounded-full text-sm font-medium">
+            {appliances.length} aparelhos
+          </span>
+        </div>
+        <button
+          onClick={() => setIsCompareModalOpen(true)}
+          className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+        >
+          <Scale className="w-4 h-4" />
+          Comparar Aparelhos
+        </button>
       </div>
 
       {/* Add Form */}
@@ -189,6 +202,135 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
           </tbody>
         </table>
       </div>
+
+      {/* Compare Modal */}
+      {isCompareModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="flex items-center justify-between p-6 border-b border-slate-100">
+              <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <Scale className="w-5 h-5 text-indigo-600" />
+                Comparador de Consumo
+              </h3>
+              <button 
+                onClick={() => setIsCompareModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto">
+              <p className="text-sm text-slate-500 mb-6">
+                Selecione dois aparelhos abaixo para comparar o consumo mensal estimado (baseado no uso médio padrão).
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Aparelho A</label>
+                  <select 
+                    value={compareApp1}
+                    onChange={(e) => setCompareApp1(e.target.value)}
+                    className="w-full rounded-xl border-slate-300 border py-2.5 px-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-slate-50"
+                  >
+                    {COMMON_APPLIANCES.map(app => (
+                      <option key={`a1-${app.name}`} value={app.name}>{app.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Aparelho B</label>
+                  <select 
+                    value={compareApp2}
+                    onChange={(e) => setCompareApp2(e.target.value)}
+                    className="w-full rounded-xl border-slate-300 border py-2.5 px-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-slate-50"
+                  >
+                    {COMMON_APPLIANCES.map(app => (
+                      <option key={`a2-${app.name}`} value={app.name}>{app.name}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {(() => {
+                const app1 = COMMON_APPLIANCES.find(a => a.name === compareApp1) || COMMON_APPLIANCES[0];
+                const app2 = COMMON_APPLIANCES.find(a => a.name === compareApp2) || COMMON_APPLIANCES[1];
+                
+                const cons1 = (app1.power * app1.hoursPerDay * app1.daysPerMonth) / 1000;
+                const cons2 = (app2.power * app2.hoursPerDay * app2.daysPerMonth) / 1000;
+                
+                const maxCons = Math.max(cons1, cons2) || 1;
+                const pct1 = (cons1 / maxCons) * 100;
+                const pct2 = (cons2 / maxCons) * 100;
+
+                const diff = Math.abs(cons1 - cons2);
+                const moreApp = cons1 > cons2 ? app1.name : app2.name;
+                const lessApp = cons1 > cons2 ? app2.name : app1.name;
+                const timesMore = cons1 > cons2 ? (cons1 / (cons2 || 1)) : (cons2 / (cons1 || 1));
+
+                return (
+                  <div className="bg-slate-50 rounded-xl p-6 border border-slate-100">
+                    <div className="space-y-6">
+                      {/* Bar 1 */}
+                      <div>
+                        <div className="flex justify-between text-sm mb-2">
+                          <span className="font-medium text-slate-700">{app1.name}</span>
+                          <span className="font-bold text-indigo-600">{cons1.toFixed(1)} kWh/mês</span>
+                        </div>
+                        <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                          <div 
+                            className="bg-indigo-500 h-3 rounded-full transition-all duration-500"
+                            style={{ width: `${pct1}%` }}
+                          ></div>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-1">
+                          {app1.power}W • {app1.hoursPerDay}h/dia • {app1.daysPerMonth} dias/mês
+                        </p>
+                      </div>
+
+                      {/* Bar 2 */}
+                      <div>
+                        <div className="flex justify-between text-sm mb-2">
+                          <span className="font-medium text-slate-700">{app2.name}</span>
+                          <span className="font-bold text-emerald-600">{cons2.toFixed(1)} kWh/mês</span>
+                        </div>
+                        <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                          <div 
+                            className="bg-emerald-500 h-3 rounded-full transition-all duration-500"
+                            style={{ width: `${pct2}%` }}
+                          ></div>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-1">
+                          {app2.power}W • {app2.hoursPerDay}h/dia • {app2.daysPerMonth} dias/mês
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-8 p-4 bg-indigo-50 text-indigo-800 rounded-lg text-sm">
+                      {cons1 === cons2 ? (
+                        <p>Ambos os aparelhos possuem o mesmo consumo mensal estimado.</p>
+                      ) : (
+                        <p>
+                          O aparelho <strong>{moreApp}</strong> consome cerca de <strong>{timesMore.toFixed(1)}x mais</strong> energia que o aparelho <strong>{lessApp}</strong>, resultando em uma diferença de <strong>{diff.toFixed(1)} kWh</strong> por mês.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+            
+            <div className="p-4 border-t border-slate-100 bg-slate-50 flex justify-end">
+              <button
+                onClick={() => setIsCompareModalOpen(false)}
+                className="px-6 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors"
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
