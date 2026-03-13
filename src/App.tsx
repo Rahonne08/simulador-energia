@@ -18,10 +18,7 @@ type Tab = 'simulador' | 'conta' | 'grafico' | 'dicas' | 'rapido';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('simulador');
-  const [appliances, setAppliances] = useState<Appliance[]>([
-    { id: '1', name: 'Geladeira', quantity: 1, power: 150, hoursPerDay: 24, daysPerMonth: 30 },
-    { id: '2', name: 'Chuveiro elétrico', quantity: 1, power: 5500, hoursPerDay: 0.5, daysPerMonth: 30 },
-  ]);
+  const [appliances, setAppliances] = useState<Appliance[]>([]);
   const [billConfig, setBillConfig] = useState<BillConfig>({
     tariff: 0.84318,
     flag: 'verde',

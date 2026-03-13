@@ -1,21 +1,56 @@
-import { useState } from 'react';
-import { Users, ThermometerSun, Droplets, Zap, ChevronRight } from 'lucide-react';
-import { formatCurrency, calculateBill } from '../utils';
+import React, { useState } from 'react';
+import { Users, Zap, Wind, Bath, Tv, Monitor, Waves, Minus, Plus } from 'lucide-react';
+import { calculateBill, formatCurrency, formatNumber } from '../utils';
 
-export default function QuickEstimate() {
+interface CounterProps {
+  icon: React.ReactNode;
+  label: string;
+  value: number;
+  onChange: (val: number) => void;
+  min?: number;
+}
+
+const Counter = ({ icon, label, value, onChange, min = 0 }: CounterProps) => (
+  <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200">
+    <div className="flex items-center gap-3">
+      <div className="p-2 bg-white rounded-lg shadow-sm text-indigo-600">
+        {icon}
+      </div>
+      <span className="font-medium text-slate-700 text-sm">{label}</span>
+    </div>
+    <div className="flex items-center gap-2">
+      <button 
+        onClick={() => onChange(Math.max(min, value - 1))}
+        className="w-7 h-7 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors"
+      >
+        <Minus className="w-3 h-3" />
+      </button>
+      <span className="w-4 text-center font-medium text-sm">{value}</span>
+      <button 
+        onClick={() => onChange(value + 1)}
+        className="w-7 h-7 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors"
+      >
+        <Plus className="w-3 h-3" />
+      </button>
+    </div>
+  </div>
+);
+
+export const QuickEstimate = () => {
   const [people, setPeople] = useState(2);
-  const [hasAC, setHasAC] = useState(false);
-  const [hasElectricShower, setHasElectricShower] = useState(true);
-  const [showResult, setShowResult] = useState(false);
+  const [showers, setShowers] = useState(0);
+  const [acs, setAcs] = useState(0);
+  const [tvs, setTvs] = useState(1);
+  const [computers, setComputers] = useState(0);
+  const [washingMachines, setWashingMachines] = useState(1);
 
-  // Base calculation logic
-  // Base per person (fridge, lights, tv, etc): ~40 kWh/person
-  // AC: ~100 kWh per unit
-  // Electric Shower: ~60 kWh per person
-  const calculateEstimate = () => {
-    let kwh = people * 40;
-    if (hasAC) kwh += 120; // Assume 1 AC used moderately
-    if (hasElectricShower) kwh += (people * 50); // 1 shower per person per day
+  const calculateQuickBill = () => {
+    let kwh = people * 30; // Base 30kWh per person (fridge, lights, small devices)
+    kwh += showers * 50;   // ~50kWh per shower
+    kwh += acs * 120;      // ~120kWh per AC
+    kwh += tvs * 15;       // ~15kWh per TV
+    kwh += computers * 20; // ~20kWh per PC
+    kwh += washingMachines * 10; // ~10kWh per washing machine
 
     const bill = calculateBill(kwh, {
       tariff: 0.84318,
@@ -25,120 +60,52 @@ export default function QuickEstimate() {
       city: 'Codó' // Defaulting to Codó to include the new CIP table
     });
     
-    return { kwh, estimatedBill: bill.total };
+    return { kwh, bill };
   };
 
-  const { kwh, estimatedBill } = calculateEstimate();
+  const { kwh, bill } = calculateQuickBill();
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <div className="text-center mb-10">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 mb-4">
-          <Zap className="w-8 h-8" />
-        </div>
-        <h2 className="text-2xl font-bold text-slate-800 mb-2">Estimativa Inteligente</h2>
-        <p className="text-slate-500">Responda 3 perguntas rápidas para ter uma ideia do seu consumo mensal.</p>
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="p-6 border-b border-slate-200 bg-slate-50">
+        <h2 className="text-lg font-semibold text-slate-800">Estimativa Inteligente</h2>
+        <p className="text-sm text-slate-500 mt-1">Cálculo rápido baseado no perfil da residência</p>
       </div>
 
-      <div className="space-y-6">
-        {/* Question 1 */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-indigo-300 transition-colors">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
-              <Users className="w-6 h-6" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-slate-800">Quantas pessoas moram na casa?</h3>
-              <p className="text-sm text-slate-500">Impacta no uso de chuveiro, luzes e eletrônicos.</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4 pl-16">
-            <input 
-              type="range" 
-              min="1" 
-              max="10" 
-              value={people} 
-              onChange={(e) => { setPeople(Number(e.target.value)); setShowResult(false); }}
-              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-            />
-            <span className="font-bold text-xl text-indigo-600 w-8 text-center">{people}</span>
-          </div>
+      <div className="p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+          <Counter icon={<Users className="w-5 h-5" />} label="Pessoas" value={people} onChange={setPeople} min={1} />
+          <Counter icon={<Bath className="w-5 h-5" />} label="Chuveiros Elétricos" value={showers} onChange={setShowers} min={0} />
+          <Counter icon={<Wind className="w-5 h-5" />} label="Ar Condicionado" value={acs} onChange={setAcs} min={0} />
+          <Counter icon={<Tv className="w-5 h-5" />} label="Televisões" value={tvs} onChange={setTvs} min={0} />
+          <Counter icon={<Monitor className="w-5 h-5" />} label="Computadores" value={computers} onChange={setComputers} min={0} />
+          <Counter icon={<Waves className="w-5 h-5" />} label="Máquinas de Lavar" value={washingMachines} onChange={setWashingMachines} min={0} />
         </div>
 
-        {/* Question 2 */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-indigo-300 transition-colors">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-cyan-50 text-cyan-600 rounded-xl">
-                <ThermometerSun className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-800">Vocês usam Ar Condicionado?</h3>
-                <p className="text-sm text-slate-500">Um dos aparelhos que mais consome energia.</p>
-              </div>
-            </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input 
-                type="checkbox" 
-                className="sr-only peer" 
-                checked={hasAC}
-                onChange={(e) => { setHasAC(e.target.checked); setShowResult(false); }}
-              />
-              <div className="w-14 h-7 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-indigo-600"></div>
-            </label>
+        <div className="bg-indigo-600 rounded-xl p-6 text-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-10">
+            <Zap className="w-24 h-24" />
           </div>
-        </div>
-
-        {/* Question 3 */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-indigo-300 transition-colors">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
-                <Droplets className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-slate-800">Possuem Chuveiro Elétrico?</h3>
-                <p className="text-sm text-slate-500">O maior vilão da conta de luz na maioria das casas.</p>
-              </div>
+          
+          <div className="relative z-10">
+            <p className="text-indigo-200 text-sm font-medium mb-1">Consumo Estimado</p>
+            <div className="flex items-baseline gap-2 mb-4">
+              <span className="text-4xl font-bold">{formatNumber(kwh, 0)}</span>
+              <span className="text-indigo-200">kWh/mês</span>
             </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input 
-                type="checkbox" 
-                className="sr-only peer" 
-                checked={hasElectricShower}
-                onChange={(e) => { setHasElectricShower(e.target.checked); setShowResult(false); }}
-              />
-              <div className="w-14 h-7 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-indigo-600"></div>
-            </label>
-          </div>
-        </div>
 
-        {!showResult ? (
-          <button 
-            onClick={() => setShowResult(true)}
-            className="w-full mt-8 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 text-lg"
-          >
-            Gerar Estimativa
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        ) : (
-          <div className="mt-8 bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-8 text-white shadow-xl text-center transform transition-all animate-in fade-in slide-in-from-bottom-4">
-            <h3 className="text-indigo-200 font-medium mb-2">Sua Conta Estimada</h3>
-            <div className="text-5xl font-bold tracking-tight mb-6">
-              {formatCurrency(estimatedBill)}
-            </div>
-            
-            <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full text-sm font-medium">
-              <Zap className="w-4 h-4 text-yellow-300" />
-              Consumo aprox. de {kwh} kWh/mês
+            <div className="pt-4 border-t border-indigo-500/50">
+              <p className="text-indigo-200 text-sm font-medium mb-1">Valor Aproximado</p>
+              <span className="text-3xl font-bold">{formatCurrency(bill.total)}</span>
             </div>
             
             <p className="text-xs text-indigo-200 mt-6 opacity-80">
               * Cálculo baseado em médias nacionais (R$ 0,84/kWh). Para um valor exato, use o Simulador Completo.
             </p>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
-}
+};
+export default QuickEstimate;
