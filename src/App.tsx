@@ -23,10 +23,11 @@ export default function App() {
     { id: '2', name: 'Chuveiro elétrico', quantity: 1, power: 5500, hoursPerDay: 0.5, daysPerMonth: 30 },
   ]);
   const [billConfig, setBillConfig] = useState<BillConfig>({
-    tariff: 0.89,
+    tariff: 0.84318,
     flag: 'verde',
     isLowIncome: false,
-    city: 'São Luís',
+    connectionType: 'monofasico',
+    city: 'Codó',
   });
 
   const totalConsumption = calculateTotalConsumption(appliances);

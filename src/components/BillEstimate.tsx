@@ -10,7 +10,18 @@ interface Props {
   billConfig: BillConfig;
   setBillConfig: React.Dispatch<React.SetStateAction<BillConfig>>;
   totalConsumption: number;
-  bill: { base: number; extra: number; cip: number; total: number; discount: number };
+  bill: { 
+    base: number; 
+    extra: number; 
+    cip: number; 
+    icms: number;
+    pis: number;
+    cofins: number;
+    totalTaxes: number;
+    total: number; 
+    discount: number;
+    billedConsumption: number;
+  };
 }
 
 export default function BillEstimate({ appliances, billConfig, setBillConfig, totalConsumption, bill }: Props) {
@@ -68,6 +79,35 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
               </label>
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Tipo de Conexão
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {(['monofasico', 'bifasico', 'trifasico'] as const).map((type) => (
+                  <label 
+                    key={type} 
+                    className={`flex items-center justify-center p-2 rounded-xl border cursor-pointer transition-all text-sm ${
+                      billConfig.connectionType === type 
+                        ? 'border-indigo-500 bg-indigo-50 text-indigo-700 font-medium ring-1 ring-indigo-500' 
+                        : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    <input 
+                      type="radio" 
+                      name="connectionType" 
+                      value={type}
+                      checked={billConfig.connectionType === type}
+                      onChange={() => setBillConfig({ ...billConfig, connectionType: type })}
+                      className="sr-only"
+                    />
+                    <span className="capitalize">{type.replace('fasico', 'fásico')}</span>
+                  </label>
+                ))}
+              </div>
+              <p className="text-xs text-slate-500 mt-2">Define o custo de disponibilidade (mínimo faturável).</p>
+            </div>
+
             {!billConfig.isLowIncome && (
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -90,7 +130,7 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
             {billConfig.isLowIncome && (
               <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
                 <p className="text-sm text-emerald-800">
-                  <strong>Regra Tarifa Social:</strong> Os primeiros 80 kWh são gratuitos. O consumo acima de 80 kWh será cobrado a <strong>R$ 0,74/kWh</strong>.
+                  <strong>Regra Tarifa Social:</strong> Os primeiros 80 kWh são gratuitos (100% de desconto). O consumo acima de 80 kWh será cobrado com a tarifa normal.
                 </p>
               </div>
             )}
@@ -148,12 +188,19 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
 
             <div className="space-y-4 relative z-10">
               <div className="flex justify-between items-center pb-4 border-b border-indigo-500/30">
-                <span className="text-indigo-100">Consumo Mensal</span>
+                <span className="text-indigo-100">Consumo Faturado</span>
                 <span className="font-semibold text-lg flex items-center gap-1">
                   <Zap className="w-4 h-4 text-yellow-300" />
-                  {formatNumber(totalConsumption, 1)} kWh
+                  {formatNumber(bill.billedConsumption, 1)} kWh
                 </span>
               </div>
+              
+              {bill.billedConsumption > totalConsumption && (
+                <div className="flex justify-between items-center text-xs text-indigo-200 mt-1 mb-2">
+                  <span>Consumo Medido: {formatNumber(totalConsumption, 1)} kWh</span>
+                  <span>(Custo de Disponibilidade)</span>
+                </div>
+              )}
               
               {billConfig.isLowIncome && (
                 <div className="flex justify-between items-center text-sm text-emerald-300">
@@ -179,7 +226,22 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                 </span>
               </div>
 
-              <div className="flex justify-between items-center text-sm">
+              <div className="pt-3 mt-3 border-t border-indigo-500/30 space-y-2">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-indigo-200">ICMS (23%)</span>
+                  <span className="font-medium text-red-300">+{formatCurrency(bill.icms)}</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-indigo-200">PIS (0,5288%)</span>
+                  <span className="font-medium text-red-300">+{formatCurrency(bill.pis)}</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-indigo-200">COFINS (2,4410%)</span>
+                  <span className="font-medium text-red-300">+{formatCurrency(bill.cofins)}</span>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center text-sm pt-3 mt-3 border-t border-indigo-500/30">
                 <span className="text-indigo-200">Iluminação Pública (CIP)</span>
                 <span className="font-medium text-yellow-300">+{formatCurrency(bill.cip)}</span>
               </div>
@@ -187,7 +249,7 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
           </div>
           
           <p className="text-xs text-slate-400 text-center mt-4 px-4">
-            * Esta é uma estimativa baseada no consumo dos aparelhos informados. O valor real da conta inclui impostos (ICMS, PIS/COFINS) e taxas de iluminação pública que variam por município.
+            * Esta é uma estimativa baseada no consumo dos aparelhos informados. O valor real da conta inclui os impostos calculados acima e taxas de iluminação pública que variam por município.
           </p>
         </div>
       </div>

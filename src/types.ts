@@ -9,9 +9,12 @@ export interface Appliance {
 
 export type TariffFlag = 'verde' | 'amarela' | 'vermelha1' | 'vermelha2';
 
+export type ConnectionType = 'monofasico' | 'bifasico' | 'trifasico';
+
 export interface BillConfig {
   tariff: number; // R$ per kWh
   flag: TariffFlag;
   isLowIncome: boolean;
+  connectionType: ConnectionType;
   city: string;
 }

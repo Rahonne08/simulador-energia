@@ -11,56 +11,99 @@ export default function SavingsTips({ appliances }: Props) {
   const tips = useMemo(() => {
     const generatedTips: { title: string; desc: string; type: 'warning' | 'info' | 'success' }[] = [];
 
-    const shower = appliances.find(a => a.name.toLowerCase().includes('chuveiro'));
-    if (shower && calculateConsumption(shower) > 50) {
-      generatedTips.push({
-        title: 'Reduza o tempo no banho',
-        desc: 'O chuveiro elétrico é um dos maiores vilões. Reduzir o banho em 5 minutos por dia pode economizar muito no final do mês. Considere a posição "Verão" nos dias quentes.',
-        type: 'warning'
-      });
+    // Sort appliances by consumption
+    const sortedAppliances = [...appliances]
+      .map(app => ({ ...app, consumption: calculateConsumption(app) }))
+      .sort((a, b) => b.consumption - a.consumption);
+
+    const top3 = sortedAppliances.slice(0, 3);
+
+    // Generate tips based on top 3
+    top3.forEach(app => {
+      const name = app.name.toLowerCase();
+      if (name.includes('chuveiro')) {
+        generatedTips.push({
+          title: `Atenção ao ${app.name}`,
+          desc: 'O chuveiro elétrico é um dos maiores vilões. Reduzir o banho em 5 minutos por dia pode economizar muito no final do mês. Considere a posição "Verão" nos dias quentes.',
+          type: 'warning'
+        });
+      } else if (name.includes('ar condicionado') || name.includes('ar-condicionado')) {
+        generatedTips.push({
+          title: `Ajuste o ${app.name}`,
+          desc: 'Mantenha a temperatura em 23°C ou 24°C. Cada grau a menos aumenta o consumo em cerca de 8%. Limpe os filtros mensalmente.',
+          type: 'warning'
+        });
+      } else if (name.includes('geladeira') || name.includes('freezer') || name.includes('refrigerador')) {
+        generatedTips.push({
+          title: `Uso eficiente: ${app.name}`,
+          desc: 'Evite abrir a porta sem necessidade. Verifique as borrachas de vedação e não coloque alimentos quentes dentro.',
+          type: 'info'
+        });
+      } else if (name.includes('tv') || name.includes('televisão')) {
+        generatedTips.push({
+          title: `Economia com a ${app.name}`,
+          desc: 'Evite deixar a TV ligada quando não houver ninguém assistindo. Reduzir o brilho da tela também ajuda a poupar energia.',
+          type: 'info'
+        });
+      } else if (name.includes('ferro')) {
+        generatedTips.push({
+          title: `Dica para o ${app.name}`,
+          desc: 'Acumule a maior quantidade de roupas possível para passar tudo de uma vez. O aquecimento inicial do ferro consome muita energia.',
+          type: 'warning'
+        });
+      } else if (name.includes('máquina de lavar') || name.includes('lavadora')) {
+        generatedTips.push({
+          title: `Otimize a ${app.name}`,
+          desc: 'Lave o máximo de roupas possível de uma só vez, respeitando a capacidade da máquina. Use a dosagem correta de sabão para evitar enxágues extras.',
+          type: 'info'
+        });
+      } else if (name.includes('incandescente') || name.includes('lâmpada')) {
+        generatedTips.push({
+          title: `Troque suas lâmpadas`,
+          desc: 'Substituir lâmpadas antigas por LED pode reduzir o consumo de iluminação em até 80%.',
+          type: 'success'
+        });
+      } else {
+        // Generic tip for high-consuming appliance
+        generatedTips.push({
+          title: `Cuidado com: ${app.name}`,
+          desc: `Este aparelho está entre os que mais consomem energia na sua casa (${app.consumption.toFixed(1)} kWh/mês). Avalie se é possível reduzir seu tempo de uso diário.`,
+          type: 'warning'
+        });
+      }
+    });
+
+    // Deduplicate tips by title (in case of multiple similar appliances)
+    const uniqueTips = generatedTips.filter((tip, index, self) =>
+      index === self.findIndex((t) => t.title === tip.title)
+    );
+
+    // If we don't have enough tips or no appliances, add phantom load and general efficiency tips
+    if (uniqueTips.length < 3 || appliances.length === 0) {
+      if (!uniqueTips.some(t => t.title.includes('Standby') || t.title.includes('Fantasma'))) {
+        uniqueTips.push({
+          title: 'Cuidado com o Consumo Fantasma (Standby)',
+          desc: 'Aparelhos na tomada (TVs, micro-ondas, computadores, carregadores) continuam consumindo energia mesmo desligados. Desligue-os da tomada quando não estiverem em uso.',
+          type: 'info'
+        });
+      }
+      if (!uniqueTips.some(t => t.title.includes('luz natural'))) {
+        uniqueTips.push({
+          title: 'Aproveite a luz natural',
+          desc: 'Abra janelas e cortinas durante o dia para evitar acender lâmpadas desnecessariamente. Pinte as paredes internas com cores claras.',
+          type: 'success'
+        });
+      }
+      if (uniqueTips.length < 4 && !uniqueTips.some(t => t.title.includes('Eficiência'))) {
+        uniqueTips.push({
+          title: 'Atenção à Eficiência Energética',
+          desc: 'Ao comprar novos eletrodomésticos, procure sempre pelo Selo Procel A, que indica os modelos mais eficientes e econômicos do mercado.',
+          type: 'success'
+        });
+      }
     }
 
-    const ac = appliances.find(a => a.name.toLowerCase().includes('ar condicionado'));
-    if (ac && calculateConsumption(ac) > 100) {
-      generatedTips.push({
-        title: 'Ajuste o Ar Condicionado',
-        desc: 'Mantenha a temperatura em 23°C ou 24°C. Cada grau a menos aumenta o consumo em cerca de 8%. Limpe os filtros mensalmente.',
-        type: 'warning'
-      });
-    }
-
-    const fridge = appliances.find(a => a.name.toLowerCase().includes('geladeira'));
-    if (fridge) {
-      generatedTips.push({
-        title: 'Uso eficiente da Geladeira',
-        desc: 'Evite abrir a porta sem necessidade. Verifique as borrachas de vedação e não coloque alimentos quentes dentro.',
-        type: 'info'
-      });
-    }
-
-    const incand = appliances.find(a => a.name.toLowerCase().includes('incandescente'));
-    if (incand) {
-      generatedTips.push({
-        title: 'Troque suas lâmpadas',
-        desc: 'Substituir lâmpadas incandescentes por LED pode reduzir o consumo de iluminação em até 80%.',
-        type: 'success'
-      });
-    }
-
-    if (generatedTips.length === 0) {
-      generatedTips.push({
-        title: 'Desligue aparelhos em Standby',
-        desc: 'Aparelhos na tomada (TVs, micro-ondas, computadores) continuam consumindo energia. Desligue-os quando não estiverem em uso.',
-        type: 'info'
-      });
-      generatedTips.push({
-        title: 'Aproveite a luz natural',
-        desc: 'Abra janelas e cortinas durante o dia para evitar acender lâmpadas desnecessariamente.',
-        type: 'success'
-      });
-    }
-
-    return generatedTips;
+    return uniqueTips.slice(0, 4);
   }, [appliances]);
 
   return (

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Users, ThermometerSun, Droplets, Zap, ChevronRight } from 'lucide-react';
-import { formatCurrency } from '../utils';
+import { formatCurrency, calculateBill } from '../utils';
 
 export default function QuickEstimate() {
   const [people, setPeople] = useState(2);
@@ -17,8 +17,15 @@ export default function QuickEstimate() {
     if (hasAC) kwh += 120; // Assume 1 AC used moderately
     if (hasElectricShower) kwh += (people * 50); // 1 shower per person per day
 
-    const estimatedBill = kwh * 0.89; // Average tariff
-    return { kwh, estimatedBill };
+    const bill = calculateBill(kwh, {
+      tariff: 0.84318,
+      flag: 'verde',
+      isLowIncome: false,
+      connectionType: 'monofasico',
+      city: 'Codó' // Defaulting to Codó to include the new CIP table
+    });
+    
+    return { kwh, estimatedBill: bill.total };
   };
 
   const { kwh, estimatedBill } = calculateEstimate();
@@ -127,7 +134,7 @@ export default function QuickEstimate() {
             </div>
             
             <p className="text-xs text-indigo-200 mt-6 opacity-80">
-              * Cálculo baseado em médias nacionais (R$ 0,89/kWh). Para um valor exato, use o Simulador Completo.
+              * Cálculo baseado em médias nacionais (R$ 0,84/kWh). Para um valor exato, use o Simulador Completo.
             </p>
           </div>
         )}

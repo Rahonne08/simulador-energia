@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { Appliance } from '../types';
 import { calculateConsumption } from '../utils';
-import { X, Info } from 'lucide-react';
+import { X, Info, PieChart as PieChartIcon, BarChart3, LineChart as LineChartIcon } from 'lucide-react';
 
 interface Props {
   appliances: Appliance[];
@@ -13,6 +13,7 @@ const COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'
 
 export default function ConsumptionChart({ appliances, totalConsumption }: Props) {
   const [selectedApplianceName, setSelectedApplianceName] = useState<string | null>(null);
+  const [chartType, setChartType] = useState<'pie' | 'bar' | 'line'>('pie');
 
   const data = useMemo(() => {
     return appliances
@@ -48,42 +49,106 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
     return null;
   };
 
+  const handleChartClick = (state: any) => {
+    if (state && state.activePayload && state.activePayload.length > 0) {
+      setSelectedApplianceName(state.activePayload[0].payload.name);
+    }
+  };
+
   return (
     <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <h2 className="text-xl font-bold text-slate-800">Distribuição de Consumo</h2>
-        <div className="flex items-center gap-2 text-sm text-slate-500 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
-          <Info className="w-4 h-4" />
-          <span>Clique em uma fatia para ver detalhes</span>
+        <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-2 text-sm text-slate-500 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
+            <Info className="w-4 h-4" />
+            <span>Clique em um elemento para ver detalhes</span>
+          </div>
+          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
+            <button 
+              onClick={() => setChartType('pie')} 
+              className={`p-1.5 rounded-md transition-all ${chartType === 'pie' ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
+              title="Gráfico de Pizza"
+            >
+              <PieChartIcon className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={() => setChartType('bar')} 
+              className={`p-1.5 rounded-md transition-all ${chartType === 'bar' ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
+              title="Gráfico de Barras"
+            >
+              <BarChart3 className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={() => setChartType('line')} 
+              className={`p-1.5 rounded-md transition-all ${chartType === 'line' ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
+              title="Gráfico de Linha"
+            >
+              <LineChartIcon className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
       
       <div className="flex flex-col md:flex-row gap-8 items-start">
         <div className="flex-1 h-[400px] w-full min-w-0">
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                innerRadius={80}
-                outerRadius={140}
-                paddingAngle={2}
-                dataKey="value"
-                stroke="none"
-              >
-                {data.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={COLORS[index % COLORS.length]} 
-                    onClick={() => setSelectedApplianceName(entry.name)}
-                    className="cursor-pointer hover:opacity-80 transition-opacity outline-none"
-                  />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomTooltip />} />
-              <Legend verticalAlign="bottom" height={36} />
-            </PieChart>
+            {chartType === 'pie' ? (
+              <PieChart>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={80}
+                  outerRadius={140}
+                  paddingAngle={2}
+                  dataKey="value"
+                  stroke="none"
+                >
+                  {data.map((entry, index) => (
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={COLORS[index % COLORS.length]} 
+                      onClick={() => setSelectedApplianceName(entry.name)}
+                      className="cursor-pointer hover:opacity-80 transition-opacity outline-none"
+                    />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+                <Legend verticalAlign="bottom" height={36} />
+              </PieChart>
+            ) : chartType === 'bar' ? (
+              <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 60 }} onClick={handleChartClick}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <XAxis dataKey="name" angle={-45} textAnchor="end" height={60} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <YAxis tick={{ fontSize: 12, fill: '#64748b' }} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f1f5f9' }} />
+                <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                  {data.map((entry, index) => (
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={COLORS[index % COLORS.length]} 
+                      className="cursor-pointer hover:opacity-80 transition-opacity outline-none"
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            ) : (
+              <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 60 }} onClick={handleChartClick}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <XAxis dataKey="name" angle={-45} textAnchor="end" height={60} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <YAxis tick={{ fontSize: 12, fill: '#64748b' }} />
+                <Tooltip content={<CustomTooltip />} />
+                <Line 
+                  type="monotone" 
+                  dataKey="value" 
+                  stroke="#4f46e5" 
+                  strokeWidth={3} 
+                  dot={{ r: 6, fill: '#4f46e5', strokeWidth: 2, stroke: '#fff' }} 
+                  activeDot={{ r: 8, cursor: 'pointer' }} 
+                />
+              </LineChart>
+            )}
           </ResponsiveContainer>
         </div>
 
