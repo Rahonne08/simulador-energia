@@ -19,8 +19,8 @@ type Tab = 'simulador' | 'conta' | 'grafico' | 'dicas' | 'rapido';
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('simulador');
   const [appliances, setAppliances] = useState<Appliance[]>([
-    { id: '1', name: 'Geladeira', power: 150, hoursPerDay: 24, daysPerMonth: 30 },
-    { id: '2', name: 'Chuveiro elétrico', power: 5500, hoursPerDay: 0.5, daysPerMonth: 30 },
+    { id: '1', name: 'Geladeira', quantity: 1, power: 150, hoursPerDay: 24, daysPerMonth: 30 },
+    { id: '2', name: 'Chuveiro elétrico', quantity: 1, power: 5500, hoursPerDay: 0.5, daysPerMonth: 30 },
   ]);
   const [billConfig, setBillConfig] = useState<BillConfig>({
     tariff: 0.89,
@@ -35,7 +35,7 @@ export default function App() {
     { id: 'conta', label: 'Estimativa', icon: <Zap className="w-5 h-5" /> },
     { id: 'grafico', label: 'Gráfico', icon: <PieChart className="w-5 h-5" /> },
     { id: 'dicas', label: 'Dicas', icon: <Lightbulb className="w-5 h-5" /> },
-    { id: 'rapido', label: 'Extra Rápido', icon: <TrendingDown className="w-5 h-5" /> },
+    { id: 'rapido', label: 'Estimativa Rápida', icon: <TrendingDown className="w-5 h-5" /> },
   ];
 
   return (
@@ -90,6 +90,17 @@ export default function App() {
                   </span>
                 </div>
               </div>
+            </div>
+
+            {/* Quick Estimate CTA */}
+            <div className="mt-4 hidden lg:block">
+              <button
+                onClick={() => setActiveTab('rapido')}
+                className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl font-medium transition-colors shadow-sm"
+              >
+                <TrendingDown className="w-5 h-5" />
+                Estimativa Rápida
+              </button>
             </div>
           </div>
 

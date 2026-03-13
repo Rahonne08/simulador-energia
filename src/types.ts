@@ -1,6 +1,7 @@
 export interface Appliance {
   id: string;
   name: string;
+  quantity: number;
   power: number; // Watts
   hoursPerDay: number;
   daysPerMonth: number;

@@ -2,7 +2,7 @@ import { Appliance, BillConfig } from './types';
 import { TARIFF_FLAGS } from './constants';
 
 export const calculateConsumption = (appliance: Appliance): number => {
-  return (appliance.power * appliance.hoursPerDay * appliance.daysPerMonth) / 1000;
+  return (appliance.power * appliance.hoursPerDay * appliance.daysPerMonth * appliance.quantity) / 1000;
 };
 
 export const calculateTotalConsumption = (appliances: Appliance[]): number => {

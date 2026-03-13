@@ -12,6 +12,7 @@ interface Props {
 export default function ApplianceList({ appliances, setAppliances }: Props) {
   const [newAppliance, setNewAppliance] = useState<Partial<Appliance>>({
     name: '',
+    quantity: 1,
     power: 0,
     hoursPerDay: 0,
     daysPerMonth: 30,
@@ -25,13 +26,14 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
       {
         id: Math.random().toString(36).substr(2, 9),
         name: newAppliance.name,
+        quantity: Number(newAppliance.quantity) || 1,
         power: Number(newAppliance.power),
         hoursPerDay: Number(newAppliance.hoursPerDay),
         daysPerMonth: Number(newAppliance.daysPerMonth) || 30,
       }
     ]);
     
-    setNewAppliance({ name: '', power: 0, hoursPerDay: 0, daysPerMonth: 30 });
+    setNewAppliance({ name: '', quantity: 1, power: 0, hoursPerDay: 0, daysPerMonth: 30 });
   };
 
   const handleRemove = (id: string) => {
@@ -72,7 +74,7 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
           </select>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
           <div className="md:col-span-1">
             <label className="block text-sm font-medium text-slate-700 mb-1">Nome</label>
             <input 
@@ -81,6 +83,17 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
               onChange={e => setNewAppliance({...newAppliance, name: e.target.value})}
               className="w-full rounded-lg border-slate-300 border p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
               placeholder="Ex: Ventilador"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Qtd</label>
+            <input 
+              type="number" 
+              min="1"
+              value={newAppliance.quantity || ''}
+              onChange={e => setNewAppliance({...newAppliance, quantity: Number(e.target.value)})}
+              className="w-full rounded-lg border-slate-300 border p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+              placeholder="Ex: 1"
             />
           </div>
           <div>
@@ -131,6 +144,7 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
           <thead>
             <tr className="border-b border-slate-200 text-sm text-slate-500">
               <th className="pb-3 font-medium">Aparelho</th>
+              <th className="pb-3 font-medium">Qtd</th>
               <th className="pb-3 font-medium">Potência</th>
               <th className="pb-3 font-medium">Uso</th>
               <th className="pb-3 font-medium">Consumo Mensal</th>
@@ -140,7 +154,7 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
           <tbody>
             {appliances.length === 0 ? (
               <tr>
-                <td colSpan={5} className="py-8 text-center text-slate-500">
+                <td colSpan={6} className="py-8 text-center text-slate-500">
                   Nenhum aparelho adicionado.
                 </td>
               </tr>
@@ -150,6 +164,7 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                 return (
                   <tr key={app.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
                     <td className="py-4 font-medium text-slate-800">{app.name}</td>
+                    <td className="py-4 text-slate-600">{app.quantity}</td>
                     <td className="py-4 text-slate-600">{app.power} W</td>
                     <td className="py-4 text-slate-600">{app.hoursPerDay}h/dia × {app.daysPerMonth} dias</td>
                     <td className="py-4">

@@ -8,13 +8,13 @@ export const TARIFF_FLAGS: Record<TariffFlag, { label: string; extraPer100kWh: n
 };
 
 export const COMMON_APPLIANCES = [
-  { name: 'Geladeira', power: 150, hoursPerDay: 24, daysPerMonth: 30 },
-  { name: 'Ar condicionado', power: 1200, hoursPerDay: 8, daysPerMonth: 30 },
-  { name: 'Chuveiro elétrico', power: 5500, hoursPerDay: 0.5, daysPerMonth: 30 },
-  { name: 'TV', power: 120, hoursPerDay: 5, daysPerMonth: 30 },
-  { name: 'Máquina de lavar', power: 500, hoursPerDay: 1, daysPerMonth: 15 },
-  { name: 'Lâmpada LED', power: 9, hoursPerDay: 5, daysPerMonth: 30 },
-  { name: 'Lâmpada Incandescente', power: 60, hoursPerDay: 5, daysPerMonth: 30 },
-  { name: 'Ferro de passar', power: 1000, hoursPerDay: 1, daysPerMonth: 8 },
-  { name: 'Computador', power: 250, hoursPerDay: 8, daysPerMonth: 30 },
+  { name: 'Geladeira', quantity: 1, power: 150, hoursPerDay: 24, daysPerMonth: 30 },
+  { name: 'Ar condicionado', quantity: 1, power: 1200, hoursPerDay: 8, daysPerMonth: 30 },
+  { name: 'Chuveiro elétrico', quantity: 1, power: 5500, hoursPerDay: 0.5, daysPerMonth: 30 },
+  { name: 'TV', quantity: 1, power: 120, hoursPerDay: 5, daysPerMonth: 30 },
+  { name: 'Máquina de lavar', quantity: 1, power: 500, hoursPerDay: 1, daysPerMonth: 15 },
+  { name: 'Lâmpada LED', quantity: 1, power: 9, hoursPerDay: 5, daysPerMonth: 30 },
+  { name: 'Lâmpada Incandescente', quantity: 1, power: 60, hoursPerDay: 5, daysPerMonth: 30 },
+  { name: 'Ferro de passar', quantity: 1, power: 1000, hoursPerDay: 1, daysPerMonth: 8 },
+  { name: 'Computador', quantity: 1, power: 250, hoursPerDay: 8, daysPerMonth: 30 },
 ];
