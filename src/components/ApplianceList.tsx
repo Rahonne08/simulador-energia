@@ -19,6 +19,7 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
   });
 
   const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
+  const [isClearModalOpen, setIsClearModalOpen] = useState(false);
   const [compareApp1, setCompareApp1] = useState<string>(COMMON_APPLIANCES[0].name);
   const [compareApp2, setCompareApp2] = useState<string>(COMMON_APPLIANCES[1].name);
 
@@ -60,13 +61,24 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
             {appliances.length} aparelhos
           </span>
         </div>
-        <button
-          onClick={() => setIsCompareModalOpen(true)}
-          className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-        >
-          <Scale className="w-4 h-4" />
-          Comparar Aparelhos
-        </button>
+        <div className="flex items-center gap-2">
+          {appliances.length > 0 && (
+            <button
+              onClick={() => setIsClearModalOpen(true)}
+              className="flex items-center gap-2 bg-rose-50 hover:bg-rose-100 text-rose-600 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            >
+              <Trash2 className="w-4 h-4" />
+              Limpar Tudo
+            </button>
+          )}
+          <button
+            onClick={() => setIsCompareModalOpen(true)}
+            className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          >
+            <Scale className="w-4 h-4" />
+            Comparar Aparelhos
+          </button>
+        </div>
       </div>
 
       {/* Add Form */}
@@ -369,6 +381,35 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                 className="px-6 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors"
               >
                 Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Clear All Modal */}
+      {isClearModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col">
+            <div className="p-6">
+              <h3 className="text-lg font-bold text-slate-800 mb-2">Limpar todos os aparelhos?</h3>
+              <p className="text-slate-600">Tem certeza que deseja remover todos os aparelhos da sua lista? Esta ação não pode ser desfeita.</p>
+            </div>
+            <div className="p-4 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+              <button
+                onClick={() => setIsClearModalOpen(false)}
+                className="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={() => {
+                  setAppliances([]);
+                  setIsClearModalOpen(false);
+                }}
+                className="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm font-medium hover:bg-rose-700 transition-colors"
+              >
+                Sim, limpar tudo
               </button>
             </div>
           </div>
