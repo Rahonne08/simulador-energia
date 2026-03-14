@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, Zap, Scale, X } from 'lucide-react';
+import { Plus, Trash2, Zap, Scale, X, CheckCircle2, TrendingUp, Info } from 'lucide-react';
 import { Appliance } from '../types';
 import { COMMON_APPLIANCES } from '../constants';
 import { calculateConsumption } from '../utils';
@@ -274,52 +274,89 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                 const lessApp = cons1 > cons2 ? app2.name : app1.name;
                 const timesMore = cons1 > cons2 ? (cons1 / (cons2 || 1)) : (cons2 / (cons1 || 1));
 
+                const isApp1Efficient = cons1 < cons2;
+                const isApp2Efficient = cons2 < cons1;
+                const isEqual = cons1 === cons2;
+
+                const getStyles = (isEfficient: boolean, isEq: boolean) => {
+                  if (isEq) return { bar: 'bg-indigo-500', text: 'text-indigo-600', bg: 'bg-indigo-50/50', border: 'border-indigo-100' };
+                  return isEfficient 
+                    ? { bar: 'bg-emerald-500', text: 'text-emerald-600', bg: 'bg-emerald-50/50', border: 'border-emerald-200' }
+                    : { bar: 'bg-rose-500', text: 'text-rose-600', bg: 'bg-rose-50/50', border: 'border-rose-200' };
+                };
+
+                const style1 = getStyles(isApp1Efficient, isEqual);
+                const style2 = getStyles(isApp2Efficient, isEqual);
+
                 return (
-                  <div className="bg-slate-50 rounded-xl p-6 border border-slate-100">
-                    <div className="space-y-6">
+                  <div className="bg-white rounded-xl">
+                    <div className="space-y-4">
                       {/* Bar 1 */}
-                      <div>
-                        <div className="flex justify-between text-sm mb-2">
-                          <span className="font-medium text-slate-700">{app1.name}</span>
-                          <span className="font-bold text-indigo-600">{cons1.toFixed(1)} kWh/mês</span>
+                      <div className={`p-4 rounded-xl border ${style1.border} ${style1.bg} transition-colors`}>
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-bold text-slate-800">{app1.name}</span>
+                              {isApp1Efficient && <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full"><CheckCircle2 className="w-3 h-3" /> Mais Eficiente</span>}
+                              {!isApp1Efficient && !isEqual && <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full"><TrendingUp className="w-3 h-3" /> Maior Consumo</span>}
+                            </div>
+                            <p className="text-xs text-slate-500">
+                              {app1.power}W • {app1.hoursPerDay}h/dia • {app1.daysPerMonth} dias/mês
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <span className={`font-bold text-xl ${style1.text}`}>{cons1.toFixed(1)}</span>
+                            <span className={`text-xs font-medium block opacity-80 ${style1.text}`}>kWh/mês</span>
+                          </div>
                         </div>
-                        <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                        <div className="w-full bg-slate-200/70 rounded-full h-3 overflow-hidden border border-slate-200/50">
                           <div 
-                            className="bg-indigo-500 h-3 rounded-full transition-all duration-500"
+                            className={`${style1.bar} h-3 rounded-full transition-all duration-1000 ease-out`}
                             style={{ width: `${pct1}%` }}
                           ></div>
                         </div>
-                        <p className="text-xs text-slate-500 mt-1">
-                          {app1.power}W • {app1.hoursPerDay}h/dia • {app1.daysPerMonth} dias/mês
-                        </p>
                       </div>
 
                       {/* Bar 2 */}
-                      <div>
-                        <div className="flex justify-between text-sm mb-2">
-                          <span className="font-medium text-slate-700">{app2.name}</span>
-                          <span className="font-bold text-emerald-600">{cons2.toFixed(1)} kWh/mês</span>
+                      <div className={`p-4 rounded-xl border ${style2.border} ${style2.bg} transition-colors`}>
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-bold text-slate-800">{app2.name}</span>
+                              {isApp2Efficient && <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full"><CheckCircle2 className="w-3 h-3" /> Mais Eficiente</span>}
+                              {!isApp2Efficient && !isEqual && <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full"><TrendingUp className="w-3 h-3" /> Maior Consumo</span>}
+                            </div>
+                            <p className="text-xs text-slate-500">
+                              {app2.power}W • {app2.hoursPerDay}h/dia • {app2.daysPerMonth} dias/mês
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <span className={`font-bold text-xl ${style2.text}`}>{cons2.toFixed(1)}</span>
+                            <span className={`text-xs font-medium block opacity-80 ${style2.text}`}>kWh/mês</span>
+                          </div>
                         </div>
-                        <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                        <div className="w-full bg-slate-200/70 rounded-full h-3 overflow-hidden border border-slate-200/50">
                           <div 
-                            className="bg-emerald-500 h-3 rounded-full transition-all duration-500"
+                            className={`${style2.bar} h-3 rounded-full transition-all duration-1000 ease-out`}
                             style={{ width: `${pct2}%` }}
                           ></div>
                         </div>
-                        <p className="text-xs text-slate-500 mt-1">
-                          {app2.power}W • {app2.hoursPerDay}h/dia • {app2.daysPerMonth} dias/mês
-                        </p>
                       </div>
                     </div>
 
-                    <div className="mt-8 p-4 bg-indigo-50 text-indigo-800 rounded-lg text-sm">
-                      {cons1 === cons2 ? (
-                        <p>Ambos os aparelhos possuem o mesmo consumo mensal estimado.</p>
-                      ) : (
-                        <p>
-                          O aparelho <strong>{moreApp}</strong> consome cerca de <strong>{timesMore.toFixed(1)}x mais</strong> energia que o aparelho <strong>{lessApp}</strong>, resultando em uma diferença de <strong>{diff.toFixed(1)} kWh</strong> por mês.
-                        </p>
-                      )}
+                    <div className="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-xl flex items-start gap-3">
+                      <div className="p-1.5 bg-white rounded-full shadow-sm border border-slate-200 shrink-0 mt-0.5">
+                        <Info className="w-4 h-4 text-indigo-500" />
+                      </div>
+                      <div className="text-sm text-slate-700 leading-relaxed">
+                        {isEqual ? (
+                          <p>Ambos os aparelhos possuem o mesmo consumo mensal estimado de <strong>{cons1.toFixed(1)} kWh</strong>.</p>
+                        ) : (
+                          <p>
+                            O <strong>{moreApp}</strong> consome cerca de <strong className="text-rose-600">{timesMore.toFixed(1)}x mais</strong> energia que o <strong>{lessApp}</strong>, resultando em uma diferença de <strong className="text-indigo-600">{diff.toFixed(1)} kWh</strong> por mês.
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 );

@@ -48,7 +48,8 @@ export const calculateBill = (totalConsumption: number, config: BillConfig): {
     base = billedConsumption * config.tariff;
   }
 
-  const flagExtra = TARIFF_FLAGS[config.flag].extraPer100kWh;
+  const flagData = TARIFF_FLAGS[config.flag];
+  const flagExtra = flagData ? flagData.extraPer100kWh : 0;
   let extra = 0;
   let extraDiscount = 0;
   

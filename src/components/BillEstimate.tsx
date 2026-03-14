@@ -23,6 +23,14 @@ interface Props {
 }
 
 export default function BillEstimate({ appliances, billConfig, setBillConfig, totalConsumption, bill }: Props) {
+  const getFlagColorName = (colorClass: string) => {
+    if (!colorClass) return 'slate';
+    if (colorClass.includes('green')) return 'green';
+    if (colorClass.includes('yellow')) return 'yellow';
+    if (colorClass.includes('red')) return 'red';
+    return 'slate';
+  };
+
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-8">
@@ -122,7 +130,7 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                     key={key} 
                     className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
                       billConfig.flag === key 
-                        ? `border-${flag.color.split('-')[1]}-500 ${flag.bg} ring-1 ring-${flag.color.split('-')[1]}-500` 
+                        ? `border-${getFlagColorName(flag.color)}-500 ${flag.bg} ring-1 ring-${getFlagColorName(flag.color)}-500` 
                         : 'border-slate-200 hover:bg-slate-50'
                     }`}
                   >
@@ -132,7 +140,11 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                         name="tariffFlag" 
                         value={key}
                         checked={billConfig.flag === key}
-                        onChange={() => setBillConfig({ ...billConfig, flag: key as TariffFlag })}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setBillConfig({ ...billConfig, flag: key as TariffFlag });
+                          }
+                        }}
                         className="w-4 h-4 text-indigo-600 focus:ring-indigo-500 border-slate-300"
                       />
                       <span className={`font-medium ${billConfig.flag === key ? flag.color : 'text-slate-700'}`}>

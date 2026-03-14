@@ -89,8 +89,8 @@ export default function App() {
                   <p className="text-2xl font-bold text-emerald-600">{formatCurrency(bill.total)}</p>
                 </div>
                 <div>
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${TARIFF_FLAGS[billConfig.flag].bg} ${TARIFF_FLAGS[billConfig.flag].color}`}>
-                    {TARIFF_FLAGS[billConfig.flag].label}
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${TARIFF_FLAGS[billConfig.flag]?.bg || 'bg-slate-100'} ${TARIFF_FLAGS[billConfig.flag]?.color || 'text-slate-600'}`}>
+                    {TARIFF_FLAGS[billConfig.flag]?.label || 'Bandeira Desconhecida'}
                   </span>
                 </div>
               </div>
