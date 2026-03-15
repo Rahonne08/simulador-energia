@@ -163,62 +163,115 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
         </button>
       </div>
 
-      {/* Appliance List */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-slate-200 text-sm text-slate-500">
-              <th className="pb-3 font-medium">Aparelho</th>
-              <th className="pb-3 font-medium">Qtd</th>
-              <th className="pb-3 font-medium">Potência</th>
-              <th className="pb-3 font-medium">Uso</th>
-              <th className="pb-3 font-medium">Consumo Diário</th>
-              <th className="pb-3 font-medium">Consumo Mensal</th>
-              <th className="pb-3 font-medium text-right">Ação</th>
-            </tr>
-          </thead>
-          <tbody>
-            {appliances.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="py-8 text-center text-slate-500">
-                  Nenhum aparelho adicionado.
-                </td>
+      {/* Appliance List - Desktop Table / Mobile Cards */}
+      <div className="mt-4">
+        {/* Desktop Table Header - Hidden on Mobile */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-slate-200 text-sm text-slate-500">
+                <th className="pb-3 font-medium">Aparelho</th>
+                <th className="pb-3 font-medium">Qtd</th>
+                <th className="pb-3 font-medium">Potência</th>
+                <th className="pb-3 font-medium">Uso</th>
+                <th className="pb-3 font-medium">Consumo Diário</th>
+                <th className="pb-3 font-medium">Consumo Mensal</th>
+                <th className="pb-3 font-medium text-right">Ação</th>
               </tr>
-            ) : (
-              appliances.map(app => {
-                const monthlyConsumption = calculateConsumption(app);
-                const dailyConsumption = (app.power * app.hoursPerDay * app.quantity) / 1000;
-                
-                return (
-                  <tr key={app.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
-                    <td className="py-4 font-medium text-slate-800">{app.name}</td>
-                    <td className="py-4 text-slate-600">{app.quantity}</td>
-                    <td className="py-4 text-slate-600">{app.power} W</td>
-                    <td className="py-4 text-slate-600">{app.hoursPerDay}h/dia × {app.daysPerMonth} dias</td>
-                    <td className="py-4 text-slate-600">
-                      {dailyConsumption.toFixed(2)} kWh
-                    </td>
-                    <td className="py-4">
-                      <div className="flex items-center gap-1.5 text-indigo-700 font-semibold">
-                        <Zap className="w-4 h-4" />
+            </thead>
+            <tbody>
+              {appliances.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-8 text-center text-slate-500">
+                    Nenhum aparelho adicionado.
+                  </td>
+                </tr>
+              ) : (
+                appliances.map(app => {
+                  const monthlyConsumption = calculateConsumption(app);
+                  const dailyConsumption = (app.power * app.hoursPerDay * app.quantity) / 1000;
+                  
+                  return (
+                    <tr key={app.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
+                      <td className="py-4 font-medium text-slate-800">{app.name}</td>
+                      <td className="py-4 text-slate-600">{app.quantity}</td>
+                      <td className="py-4 text-slate-600">{app.power} W</td>
+                      <td className="py-4 text-slate-600">{app.hoursPerDay}h/dia × {app.daysPerMonth} dias</td>
+                      <td className="py-4 text-slate-600">
+                        {dailyConsumption.toFixed(2)} kWh
+                      </td>
+                      <td className="py-4">
+                        <div className="flex items-center gap-1.5 text-indigo-700 font-semibold">
+                          <Zap className="w-4 h-4" />
+                          {monthlyConsumption.toFixed(1)} kWh
+                        </div>
+                      </td>
+                      <td className="py-4 text-right">
+                        <button 
+                          onClick={() => handleRemove(app.id)}
+                          className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Remover"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile Cards - Hidden on Desktop */}
+        <div className="md:hidden space-y-4">
+          {appliances.length === 0 ? (
+            <div className="py-8 text-center text-slate-500 bg-slate-50 rounded-xl border border-dashed border-slate-300">
+              Nenhum aparelho adicionado.
+            </div>
+          ) : (
+            appliances.map(app => {
+              const monthlyConsumption = calculateConsumption(app);
+              const dailyConsumption = (app.power * app.hoursPerDay * app.quantity) / 1000;
+              
+              return (
+                <div key={app.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm relative">
+                  <button 
+                    onClick={() => handleRemove(app.id)}
+                    className="absolute top-3 right-3 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    title="Remover"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                  
+                  <h4 className="font-bold text-slate-800 mb-3 pr-8">{app.name}</h4>
+                  
+                  <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
+                    <div>
+                      <p className="text-slate-500 text-xs uppercase font-semibold tracking-wider mb-0.5">Qtd / Potência</p>
+                      <p className="text-slate-700 font-medium">{app.quantity}x • {app.power}W</p>
+                    </div>
+                    <div>
+                      <p className="text-slate-500 text-xs uppercase font-semibold tracking-wider mb-0.5">Uso</p>
+                      <p className="text-slate-700 font-medium">{app.hoursPerDay}h/dia • {app.daysPerMonth}d</p>
+                    </div>
+                    <div>
+                      <p className="text-slate-500 text-xs uppercase font-semibold tracking-wider mb-0.5">Consumo Diário</p>
+                      <p className="text-slate-700 font-medium">{dailyConsumption.toFixed(2)} kWh</p>
+                    </div>
+                    <div>
+                      <p className="text-indigo-600 text-xs uppercase font-bold tracking-wider mb-0.5">Consumo Mensal</p>
+                      <p className="text-indigo-700 font-bold flex items-center gap-1">
+                        <Zap className="w-3 h-3" />
                         {monthlyConsumption.toFixed(1)} kWh
-                      </div>
-                    </td>
-                    <td className="py-4 text-right">
-                      <button 
-                        onClick={() => handleRemove(app.id)}
-                        className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                        title="Remover"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
 
       {/* Compare Modal */}

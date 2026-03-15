@@ -91,7 +91,7 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
       </div>
       
       <div className="flex flex-col md:flex-row gap-8 items-start">
-        <div className="flex-1 h-[550px] w-full min-w-0">
+        <div className="flex-1 h-[400px] md:h-[550px] w-full min-w-0">
           <ResponsiveContainer width="100%" height="100%">
             {chartType === 'pie' ? (
               <PieChart margin={{ top: 20, right: 20, bottom: 40, left: 20 }}>
@@ -99,8 +99,8 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
                   data={data}
                   cx="50%"
                   cy="45%"
-                  innerRadius={90}
-                  outerRadius={160}
+                  innerRadius={window.innerWidth < 768 ? 60 : 90}
+                  outerRadius={window.innerWidth < 768 ? 100 : 160}
                   paddingAngle={2}
                   dataKey="value"
                   stroke="none"
@@ -115,12 +115,12 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
                   ))}
                 </Pie>
                 <Tooltip content={<CustomTooltip />} />
-                <Legend verticalAlign="bottom" wrapperStyle={{ paddingTop: '20px' }} />
+                <Legend verticalAlign="bottom" wrapperStyle={{ paddingTop: '20px', fontSize: '12px' }} />
               </PieChart>
             ) : chartType === 'bar' ? (
-              <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 120 }} onClick={handleChartClick}>
+              <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: window.innerWidth < 768 ? 80 : 120 }} onClick={handleChartClick}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis dataKey="name" angle={-45} textAnchor="end" height={120} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <XAxis dataKey="name" angle={-45} textAnchor="end" height={window.innerWidth < 768 ? 80 : 120} tick={{ fontSize: 10, fill: '#64748b' }} />
                 <YAxis tick={{ fontSize: 12, fill: '#64748b' }} />
                 <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f1f5f9' }} />
                 <Bar dataKey="value" radius={[4, 4, 0, 0]}>
@@ -134,9 +134,9 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
                 </Bar>
               </BarChart>
             ) : (
-              <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 120 }} onClick={handleChartClick}>
+              <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: window.innerWidth < 768 ? 80 : 120 }} onClick={handleChartClick}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis dataKey="name" angle={-45} textAnchor="end" height={120} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <XAxis dataKey="name" angle={-45} textAnchor="end" height={window.innerWidth < 768 ? 80 : 120} tick={{ fontSize: 10, fill: '#64748b' }} />
                 <YAxis tick={{ fontSize: 12, fill: '#64748b' }} />
                 <Tooltip content={<CustomTooltip />} />
                 <Line 
@@ -154,17 +154,17 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
 
         <div className="w-full md:w-80 lg:w-96 bg-slate-50 p-6 rounded-2xl border border-slate-200 shrink-0">
           <h3 className="text-sm font-semibold text-slate-600 mb-4 uppercase tracking-wider">Maiores Vilões</h3>
-          <div className="space-y-4">
-            {data.slice(0, 5).map((item, index) => {
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
+            {data.slice(0, 6).map((item, index) => {
               const percent = ((item.value / totalConsumption) * 100).toFixed(1);
               return (
-                <div key={index} className="flex items-center justify-between">
+                <div key={index} className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100 md:bg-transparent md:p-0 md:border-0">
                   <div className="flex items-center gap-3">
                     <div 
-                      className="w-3 h-3 rounded-full" 
+                      className="w-3 h-3 rounded-full shrink-0" 
                       style={{ backgroundColor: COLORS[index % COLORS.length] }}
                     />
-                    <span className="text-sm font-medium text-slate-700 truncate max-w-[120px]" title={item.name}>
+                    <span className="text-sm font-medium text-slate-700 truncate max-w-[140px]" title={item.name}>
                       {item.name}
                     </span>
                   </div>

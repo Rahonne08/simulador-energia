@@ -39,23 +39,27 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
-      <header className="bg-indigo-600 text-white shadow-md">
-        <div className="max-w-5xl mx-auto px-4 py-6">
-          <div className="flex items-center gap-3">
-            <Zap className="w-8 h-8 text-yellow-300" />
-            <h1 className="text-2xl font-bold tracking-tight">Simulador de Conta de Energia</h1>
+      <header className="bg-indigo-600 text-white shadow-md sticky top-0 z-50">
+        <div className="max-w-5xl mx-auto px-4 py-4 sm:py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-300" />
+              <h1 className="text-lg sm:text-2xl font-bold tracking-tight">EcoPower</h1>
+            </div>
+            <div className="lg:hidden flex items-center gap-2 bg-indigo-700 px-3 py-1.5 rounded-full">
+              <span className="text-xs font-bold">{formatCurrency(bill.total)}</span>
+            </div>
           </div>
-          <p className="text-indigo-100 mt-1">Estime seu consumo e descubra como economizar</p>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <main className="max-w-5xl mx-auto px-4 py-6 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
           
           {/* Sidebar Navigation */}
           <div className="lg:col-span-3">
             <nav 
-              className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-4 lg:pb-0 hide-scrollbar"
+              className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0 no-scrollbar sticky top-[72px] lg:top-auto bg-slate-50 lg:bg-transparent z-40"
               aria-label="Navegação principal"
             >
               {tabs.map((tab) => (
@@ -64,13 +68,15 @@ export default function App() {
                   onClick={() => setActiveTab(tab.id as Tab)}
                   aria-label={`Aba ${tab.label}`}
                   aria-current={activeTab === tab.id ? 'page' : undefined}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors whitespace-nowrap ${
+                  className={`flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:py-3 rounded-xl transition-all whitespace-nowrap text-sm sm:text-base ${
                     activeTab === tab.id
-                      ? 'bg-indigo-100 text-indigo-700 font-medium'
-                      : 'text-slate-600 hover:bg-slate-100'
+                      ? 'bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-200'
+                      : 'bg-white lg:bg-transparent text-slate-600 hover:bg-slate-100 border border-slate-200 lg:border-0'
                   }`}
                 >
-                  {tab.icon}
+                  <span className={activeTab === tab.id ? 'text-white' : 'text-indigo-600'}>
+                    {tab.icon}
+                  </span>
                   {tab.label}
                 </button>
               ))}

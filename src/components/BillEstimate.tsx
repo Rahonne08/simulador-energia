@@ -41,18 +41,18 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
         {/* Configuration Panel */}
-        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+        <div className="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-200">
           <h3 className="text-sm font-semibold text-slate-600 mb-5 uppercase tracking-wider">Tarifa e Bandeira</h3>
           
           <div className="space-y-6">
             <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200">
-              <div>
+              <div className="pr-4">
                 <h4 className="font-medium text-slate-800">Cliente Baixa Renda</h4>
                 <p className="text-xs text-slate-500 mt-1">Tarifa Social (até 80 kWh grátis)</p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
+              <label className="relative inline-flex items-center cursor-pointer shrink-0">
                 <input 
                   type="checkbox" 
                   className="sr-only peer" 
@@ -72,7 +72,7 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                 {(['monofasico', 'bifasico', 'trifasico'] as const).map((type) => (
                   <label 
                     key={type} 
-                    className={`flex items-center justify-center p-2 rounded-xl border cursor-pointer transition-all text-sm ${
+                    className={`flex items-center justify-center p-3 rounded-xl border cursor-pointer transition-all text-sm ${
                       billConfig.connectionType === type 
                         ? 'border-indigo-500 bg-indigo-50 text-indigo-700 font-medium ring-1 ring-indigo-500' 
                         : 'border-slate-200 text-slate-600 hover:bg-slate-50'
@@ -105,7 +105,7 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                     step="0.01"
                     value={billConfig.tariff}
                     onChange={e => setBillConfig({ ...billConfig, tariff: Number(e.target.value) })}
-                    className="w-full rounded-xl border-slate-300 border py-3 pl-10 pr-4 text-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-shadow"
+                    className="w-full rounded-xl border-slate-300 border py-3 pl-10 pr-4 text-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-shadow text-lg font-semibold"
                   />
                 </div>
                 <p className="text-xs text-slate-500 mt-2">Valor cobrado pela distribuidora por cada kWh consumido.</p>
@@ -145,15 +145,15 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                             setBillConfig({ ...billConfig, flag: key as TariffFlag });
                           }
                         }}
-                        className="w-4 h-4 text-indigo-600 focus:ring-indigo-500 border-slate-300"
+                        className="w-5 h-5 text-indigo-600 focus:ring-indigo-500 border-slate-300"
                       />
                       <span className={`font-medium ${billConfig.flag === key ? flag.color : 'text-slate-700'}`}>
                         {flag.label}
                       </span>
                     </div>
                     {flag.extraPer100kWh > 0 && (
-                      <span className="text-xs font-medium text-slate-500 bg-white px-2 py-1 rounded-md shadow-sm border border-slate-100">
-                        + {formatCurrency(flag.extraPer100kWh)} / 100kWh
+                      <span className="text-xs font-medium text-slate-500 bg-white px-2 py-1 rounded-md shadow-sm border border-slate-100 whitespace-nowrap">
+                        + {formatCurrency(flag.extraPer100kWh)}
                       </span>
                     )}
                   </label>
@@ -164,14 +164,14 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
         </div>
 
         {/* Bill Breakdown */}
-        <div className="flex flex-col justify-center">
-          <div className="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-8 text-white shadow-lg relative overflow-hidden">
+        <div className="flex flex-col justify-start">
+          <div className="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
             {/* Decorative background elements */}
             <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full blur-2xl"></div>
             <div className="absolute bottom-0 left-0 -mb-4 -ml-4 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl"></div>
             
             <h3 className="text-indigo-100 font-medium mb-1 relative z-10">Valor Estimado da Conta</h3>
-            <div className="text-5xl font-bold tracking-tight mb-8 relative z-10">
+            <div className="text-4xl sm:text-5xl font-bold tracking-tight mb-8 relative z-10">
               {formatCurrency(bill.total)}
             </div>
 
@@ -185,7 +185,7 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
               </div>
               
               {bill.billedConsumption > totalConsumption && (
-                <div className="flex justify-between items-center text-xs text-indigo-200 mt-1 mb-2">
+                <div className="flex flex-col sm:flex-row justify-between sm:items-center text-xs text-indigo-200 mt-1 mb-2 gap-1">
                   <span>Consumo Medido: {formatNumber(totalConsumption, 1)} kWh</span>
                   <span>(Custo de Disponibilidade)</span>
                 </div>
@@ -200,7 +200,7 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
 
               <div className="flex justify-between items-center text-sm">
                 <span className="text-indigo-200">
-                  Custo Base ({formatCurrency(billConfig.tariff)}/kWh)
+                  Custo Base
                 </span>
                 <span className="font-medium">{formatCurrency(bill.base)}</span>
               </div>
@@ -222,18 +222,14 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                   <span className="font-medium text-red-300">+{formatCurrency(bill.icms)}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-indigo-200">PIS (0,5288%)</span>
-                  <span className="font-medium text-red-300">+{formatCurrency(bill.pis)}</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-indigo-200">COFINS (2,4410%)</span>
-                  <span className="font-medium text-red-300">+{formatCurrency(bill.cofins)}</span>
+                  <span className="text-indigo-200">PIS/COFINS</span>
+                  <span className="font-medium text-red-300">+{formatCurrency(bill.pis + bill.cofins)}</span>
                 </div>
               </div>
             </div>
           </div>
           
-          <p className="text-xs text-slate-400 text-center mt-4 px-4">
+          <p className="text-xs text-slate-400 text-center mt-4 px-4 leading-relaxed">
             * O valor estimado é calculado como: (Consumo Faturado × Tarifa) + Tributos (ICMS, PIS e COFINS).
           </p>
         </div>

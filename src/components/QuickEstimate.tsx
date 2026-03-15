@@ -11,26 +11,28 @@ interface CounterProps {
 }
 
 const Counter = ({ icon, label, value, onChange, min = 0 }: CounterProps) => (
-  <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200">
+  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200">
     <div className="flex items-center gap-3">
-      <div className="p-2 bg-white rounded-lg shadow-sm text-indigo-600">
+      <div className="p-2 bg-white rounded-lg shadow-sm text-indigo-600 shrink-0">
         {icon}
       </div>
-      <span className="font-medium text-slate-700 text-sm">{label}</span>
+      <span className="font-medium text-slate-700 text-sm sm:text-base">{label}</span>
     </div>
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-3">
       <button 
         onClick={() => onChange(Math.max(min, value - 1))}
-        className="w-7 h-7 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors"
+        className="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-300 text-slate-600 hover:bg-slate-100 active:scale-95 transition-all shadow-sm"
+        aria-label={`Diminuir ${label}`}
       >
-        <Minus className="w-3 h-3" />
+        <Minus className="w-4 h-4" />
       </button>
-      <span className="w-4 text-center font-medium text-sm">{value}</span>
+      <span className="w-6 text-center font-bold text-slate-800">{value}</span>
       <button 
         onClick={() => onChange(value + 1)}
-        className="w-7 h-7 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors"
+        className="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-300 text-slate-600 hover:bg-slate-100 active:scale-95 transition-all shadow-sm"
+        aria-label={`Aumentar ${label}`}
       >
-        <Plus className="w-3 h-3" />
+        <Plus className="w-4 h-4" />
       </button>
     </div>
   </div>
@@ -65,43 +67,41 @@ export const QuickEstimate = () => {
   const { kwh, bill } = calculateQuickBill();
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-      <div className="p-6 border-b border-slate-200 bg-slate-50">
-        <h2 className="text-lg font-semibold text-slate-800">Estimativa Inteligente</h2>
+    <div className="p-4 sm:p-6">
+      <div className="mb-6">
+        <h2 className="text-xl font-bold text-slate-800">Estimativa Inteligente</h2>
         <p className="text-sm text-slate-500 mt-1">Cálculo rápido baseado no perfil da residência</p>
       </div>
 
-      <div className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-          <Counter icon={<Users className="w-5 h-5" />} label="Pessoas" value={people} onChange={setPeople} min={1} />
-          <Counter icon={<Bath className="w-5 h-5" />} label="Chuveiros Elétricos" value={showers} onChange={setShowers} min={0} />
-          <Counter icon={<Wind className="w-5 h-5" />} label="Ar Condicionado" value={acs} onChange={setAcs} min={0} />
-          <Counter icon={<Tv className="w-5 h-5" />} label="Televisões" value={tvs} onChange={setTvs} min={0} />
-          <Counter icon={<Monitor className="w-5 h-5" />} label="Computadores" value={computers} onChange={setComputers} min={0} />
-          <Counter icon={<Waves className="w-5 h-5" />} label="Máquinas de Lavar" value={washingMachines} onChange={setWashingMachines} min={0} />
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <Counter icon={<Users className="w-5 h-5" />} label="Pessoas" value={people} onChange={setPeople} min={1} />
+        <Counter icon={<Bath className="w-5 h-5" />} label="Chuveiros Elétricos" value={showers} onChange={setShowers} min={0} />
+        <Counter icon={<Wind className="w-5 h-5" />} label="Ar Condicionado" value={acs} onChange={setAcs} min={0} />
+        <Counter icon={<Tv className="w-5 h-5" />} label="Televisões" value={tvs} onChange={setTvs} min={0} />
+        <Counter icon={<Monitor className="w-5 h-5" />} label="Computadores" value={computers} onChange={setComputers} min={0} />
+        <Counter icon={<Waves className="w-5 h-5" />} label="Máquinas de Lavar" value={washingMachines} onChange={setWashingMachines} min={0} />
+      </div>
 
-        <div className="bg-indigo-600 rounded-xl p-6 text-white relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-10">
-            <Zap className="w-24 h-24" />
+      <div className="bg-indigo-600 rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden shadow-lg shadow-indigo-200">
+        <div className="absolute top-0 right-0 p-4 opacity-10">
+          <Zap className="w-32 h-32" />
+        </div>
+        
+        <div className="relative z-10">
+          <p className="text-indigo-200 text-sm font-medium mb-1">Consumo Estimado</p>
+          <div className="flex items-baseline gap-2 mb-6">
+            <span className="text-4xl sm:text-5xl font-bold">{formatNumber(kwh, 0)}</span>
+            <span className="text-indigo-200 font-medium">kWh/mês</span>
+          </div>
+
+          <div className="pt-6 border-t border-indigo-500/50">
+            <p className="text-indigo-200 text-sm font-medium mb-1">Valor Aproximado</p>
+            <span className="text-3xl sm:text-4xl font-bold">{formatCurrency(bill.total)}</span>
           </div>
           
-          <div className="relative z-10">
-            <p className="text-indigo-200 text-sm font-medium mb-1">Consumo Estimado</p>
-            <div className="flex items-baseline gap-2 mb-4">
-              <span className="text-4xl font-bold">{formatNumber(kwh, 0)}</span>
-              <span className="text-indigo-200">kWh/mês</span>
-            </div>
-
-            <div className="pt-4 border-t border-indigo-500/50">
-              <p className="text-indigo-200 text-sm font-medium mb-1">Valor Aproximado</p>
-              <span className="text-3xl font-bold">{formatCurrency(bill.total)}</span>
-            </div>
-            
-            <p className="text-xs text-indigo-200 mt-6 opacity-80">
-              * Cálculo baseado na tarifa de R$ 0,84318/kWh. Para um valor exato, use o Simulador Completo.
-            </p>
-          </div>
+          <p className="text-xs text-indigo-300 mt-8 leading-relaxed">
+            * Cálculo baseado na tarifa média de R$ 0,84318/kWh. Para um valor exato e detalhado, utilize o Simulador Completo na aba "Aparelhos".
+          </p>
         </div>
       </div>
     </div>
