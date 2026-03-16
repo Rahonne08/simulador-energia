@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Trash2, Zap, Scale, X, CheckCircle2, TrendingUp, Info } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Appliance } from '../types';
 import { COMMON_APPLIANCES } from '../constants';
 import { calculateConsumption } from '../utils';
@@ -153,14 +154,16 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
           </div>
         </div>
         
-        <button 
+        <motion.button 
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.95 }}
           onClick={handleAdd}
           disabled={!newAppliance.name || !newAppliance.power || !newAppliance.hoursPerDay}
           className="w-full md:w-auto flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
         >
           <Plus className="w-4 h-4" />
           Adicionar Aparelho
-        </button>
+        </motion.button>
       </div>
 
       {/* Appliance List - Desktop Table / Mobile Cards */}
@@ -180,105 +183,149 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
               </tr>
             </thead>
             <tbody>
-              {appliances.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="py-8 text-center text-slate-500">
-                    Nenhum aparelho adicionado.
-                  </td>
-                </tr>
-              ) : (
-                appliances.map(app => {
-                  const monthlyConsumption = calculateConsumption(app);
-                  const dailyConsumption = (app.power * app.hoursPerDay * app.quantity) / 1000;
-                  
-                  return (
-                    <tr key={app.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
-                      <td className="py-4 font-medium text-slate-800">{app.name}</td>
-                      <td className="py-4 text-slate-600">{app.quantity}</td>
-                      <td className="py-4 text-slate-600">{app.power} W</td>
-                      <td className="py-4 text-slate-600">{app.hoursPerDay}h/dia × {app.daysPerMonth} dias</td>
-                      <td className="py-4 text-slate-600">
-                        {dailyConsumption.toFixed(2)} kWh
-                      </td>
-                      <td className="py-4">
-                        <div className="flex items-center gap-1.5 text-indigo-700 font-semibold">
-                          <Zap className="w-4 h-4" />
-                          {monthlyConsumption.toFixed(1)} kWh
-                        </div>
-                      </td>
-                      <td className="py-4 text-right">
-                        <button 
-                          onClick={() => handleRemove(app.id)}
-                          className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                          title="Remover"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
+              <AnimatePresence mode="popLayout">
+                {appliances.length === 0 ? (
+                  <motion.tr
+                    key="empty"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <td colSpan={7} className="py-8 text-center text-slate-500">
+                      Nenhum aparelho adicionado.
+                    </td>
+                  </motion.tr>
+                ) : (
+                  appliances.map(app => {
+                    const monthlyConsumption = calculateConsumption(app);
+                    const dailyConsumption = (app.power * app.hoursPerDay * app.quantity) / 1000;
+                    
+                    return (
+                      <motion.tr 
+                        key={app.id} 
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.2 }}
+                        className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors"
+                      >
+                        <td className="py-4 font-medium text-slate-800">{app.name}</td>
+                        <td className="py-4 text-slate-600">{app.quantity}</td>
+                        <td className="py-4 text-slate-600">{app.power} W</td>
+                        <td className="py-4 text-slate-600">{app.hoursPerDay}h/dia × {app.daysPerMonth} dias</td>
+                        <td className="py-4 text-slate-600">
+                          {dailyConsumption.toFixed(2)} kWh
+                        </td>
+                        <td className="py-4">
+                          <div className="flex items-center gap-1.5 text-indigo-700 font-semibold">
+                            <Zap className="w-4 h-4" />
+                            {monthlyConsumption.toFixed(1)} kWh
+                          </div>
+                        </td>
+                        <td className="py-4 text-right">
+                          <motion.button 
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => handleRemove(app.id)}
+                            className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Remover"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </motion.button>
+                        </td>
+                      </motion.tr>
+                    );
+                  })
+                )}
+              </AnimatePresence>
             </tbody>
           </table>
         </div>
 
         {/* Mobile Cards - Hidden on Desktop */}
         <div className="md:hidden space-y-4">
-          {appliances.length === 0 ? (
-            <div className="py-8 text-center text-slate-500 bg-slate-50 rounded-xl border border-dashed border-slate-300">
-              Nenhum aparelho adicionado.
-            </div>
-          ) : (
-            appliances.map(app => {
-              const monthlyConsumption = calculateConsumption(app);
-              const dailyConsumption = (app.power * app.hoursPerDay * app.quantity) / 1000;
-              
-              return (
-                <div key={app.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm relative">
-                  <button 
-                    onClick={() => handleRemove(app.id)}
-                    className="absolute top-3 right-3 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                    title="Remover"
+          <AnimatePresence mode="popLayout">
+            {appliances.length === 0 ? (
+              <motion.div 
+                key="empty"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="py-8 text-center text-slate-500 bg-slate-50 rounded-xl border border-dashed border-slate-300"
+              >
+                Nenhum aparelho adicionado.
+              </motion.div>
+            ) : (
+              appliances.map(app => {
+                const monthlyConsumption = calculateConsumption(app);
+                const dailyConsumption = (app.power * app.hoursPerDay * app.quantity) / 1000;
+                
+                return (
+                  <motion.div 
+                    key={app.id} 
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.2 }}
+                    className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm relative"
                   >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                  
-                  <h4 className="font-bold text-slate-800 mb-3 pr-8">{app.name}</h4>
-                  
-                  <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
-                    <div>
-                      <p className="text-slate-500 text-xs uppercase font-semibold tracking-wider mb-0.5">Qtd / Potência</p>
-                      <p className="text-slate-700 font-medium">{app.quantity}x • {app.power}W</p>
+                    <motion.button 
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => handleRemove(app.id)}
+                      className="absolute top-3 right-3 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      title="Remover"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </motion.button>
+                    
+                    <h4 className="font-bold text-slate-800 mb-3 pr-8">{app.name}</h4>
+                    
+                    <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
+                      <div>
+                        <p className="text-slate-500 text-xs uppercase font-semibold tracking-wider mb-0.5">Qtd / Potência</p>
+                        <p className="text-slate-700 font-medium">{app.quantity}x • {app.power}W</p>
+                      </div>
+                      <div>
+                        <p className="text-slate-500 text-xs uppercase font-semibold tracking-wider mb-0.5">Uso</p>
+                        <p className="text-slate-700 font-medium">{app.hoursPerDay}h/dia • {app.daysPerMonth}d</p>
+                      </div>
+                      <div>
+                        <p className="text-slate-500 text-xs uppercase font-semibold tracking-wider mb-0.5">Consumo Diário</p>
+                        <p className="text-slate-700 font-medium">{dailyConsumption.toFixed(2)} kWh</p>
+                      </div>
+                      <div>
+                        <p className="text-indigo-600 text-xs uppercase font-bold tracking-wider mb-0.5">Consumo Mensal</p>
+                        <p className="text-indigo-700 font-bold flex items-center gap-1">
+                          <Zap className="w-3 h-3" />
+                          {monthlyConsumption.toFixed(1)} kWh
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-slate-500 text-xs uppercase font-semibold tracking-wider mb-0.5">Uso</p>
-                      <p className="text-slate-700 font-medium">{app.hoursPerDay}h/dia • {app.daysPerMonth}d</p>
-                    </div>
-                    <div>
-                      <p className="text-slate-500 text-xs uppercase font-semibold tracking-wider mb-0.5">Consumo Diário</p>
-                      <p className="text-slate-700 font-medium">{dailyConsumption.toFixed(2)} kWh</p>
-                    </div>
-                    <div>
-                      <p className="text-indigo-600 text-xs uppercase font-bold tracking-wider mb-0.5">Consumo Mensal</p>
-                      <p className="text-indigo-700 font-bold flex items-center gap-1">
-                        <Zap className="w-3 h-3" />
-                        {monthlyConsumption.toFixed(1)} kWh
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })
-          )}
+                  </motion.div>
+                );
+              })
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
       {/* Compare Modal */}
-      {isCompareModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="flex items-center justify-between p-6 border-b border-slate-100">
+      <AnimatePresence>
+        {isCompareModalOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]"
+            >
+              <div className="flex items-center justify-between p-6 border-b border-slate-100">
               <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
                 <Scale className="w-5 h-5 text-indigo-600" />
                 Comparador de Consumo
@@ -436,15 +483,27 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                 Fechar
               </button>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
+      </AnimatePresence>
 
       {/* Clear All Modal */}
-      {isClearModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col">
-            <div className="p-6">
+      <AnimatePresence>
+        {isClearModalOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col"
+            >
+              <div className="p-6">
               <h3 className="text-lg font-bold text-slate-800 mb-2">Limpar todos os aparelhos?</h3>
               <p className="text-slate-600">Tem certeza que deseja remover todos os aparelhos da sua lista? Esta ação não pode ser desfeita.</p>
             </div>
@@ -465,9 +524,10 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                 Sim, limpar tudo
               </button>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
   );
 }

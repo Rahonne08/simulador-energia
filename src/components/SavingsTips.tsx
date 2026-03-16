@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Appliance } from '../types';
 import { calculateConsumption } from '../utils';
 import { Lightbulb, Info, AlertCircle, ArrowRight } from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface Props {
   appliances: Appliance[];
@@ -144,6 +145,21 @@ export default function SavingsTips({ appliances }: Props) {
     return uniqueTips.slice(0, 4);
   }, [appliances]);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 }
+  };
+
   return (
     <div className="p-6">
       <div className="flex items-center gap-3 mb-8">
@@ -151,10 +167,16 @@ export default function SavingsTips({ appliances }: Props) {
         <h2 className="text-xl font-bold text-slate-800">Dicas de Economia Inteligentes</h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+      >
         {tips.map((tip, index) => (
-          <div 
+          <motion.div 
             key={index}
+            variants={itemVariants}
             className={`p-6 rounded-2xl border ${
               tip.type === 'warning' ? 'bg-amber-50 border-amber-200' :
               tip.type === 'success' ? 'bg-emerald-50 border-emerald-200' :
@@ -184,11 +206,16 @@ export default function SavingsTips({ appliances }: Props) {
                 }`}>{tip.desc}</p>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
-      <div className="mt-10 bg-slate-900 rounded-2xl p-8 text-white relative overflow-hidden">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="mt-10 bg-slate-900 rounded-2xl p-8 text-white relative overflow-hidden"
+      >
         <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-indigo-500 opacity-20 rounded-full blur-3xl"></div>
         <h3 className="text-xl font-bold mb-4 relative z-10">Simulação de Troca de Aparelhos</h3>
         <p className="text-slate-300 mb-6 max-w-2xl relative z-10">
@@ -196,7 +223,10 @@ export default function SavingsTips({ appliances }: Props) {
         </p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
-          <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 flex items-center justify-between">
+          <motion.div 
+            whileHover={{ scale: 1.02 }}
+            className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 flex items-center justify-between"
+          >
             <div>
               <p className="text-sm text-slate-400">Chuveiro Elétrico</p>
               <p className="font-semibold">5500W</p>
@@ -206,9 +236,12 @@ export default function SavingsTips({ appliances }: Props) {
               <p className="text-sm text-emerald-400">Aquecedor Solar</p>
               <p className="font-semibold text-emerald-300">-80% consumo</p>
             </div>
-          </div>
+          </motion.div>
           
-          <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 flex items-center justify-between">
+          <motion.div 
+            whileHover={{ scale: 1.02 }}
+            className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 flex items-center justify-between"
+          >
             <div>
               <p className="text-sm text-slate-400">Lâmpada Comum</p>
               <p className="font-semibold">60W</p>
@@ -218,9 +251,9 @@ export default function SavingsTips({ appliances }: Props) {
               <p className="text-sm text-emerald-400">Lâmpada LED</p>
               <p className="font-semibold text-emerald-300">9W (-85%)</p>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

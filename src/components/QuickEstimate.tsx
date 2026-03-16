@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Users, Zap, Wind, Bath, Tv, Monitor, Waves, Minus, Plus } from 'lucide-react';
+import { motion } from 'motion/react';
 import { calculateBill, formatCurrency, formatNumber } from '../utils';
 
 interface CounterProps {
@@ -19,21 +20,25 @@ const Counter = ({ icon, label, value, onChange, min = 0 }: CounterProps) => (
       <span className="font-medium text-slate-700 text-sm sm:text-base">{label}</span>
     </div>
     <div className="flex items-center gap-3">
-      <button 
+      <motion.button 
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
         onClick={() => onChange(Math.max(min, value - 1))}
-        className="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-300 text-slate-600 hover:bg-slate-100 active:scale-95 transition-all shadow-sm"
+        className="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-300 text-slate-600 hover:bg-slate-100 transition-all shadow-sm"
         aria-label={`Diminuir ${label}`}
       >
         <Minus className="w-4 h-4" />
-      </button>
+      </motion.button>
       <span className="w-6 text-center font-bold text-slate-800">{value}</span>
-      <button 
+      <motion.button 
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
         onClick={() => onChange(value + 1)}
-        className="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-300 text-slate-600 hover:bg-slate-100 active:scale-95 transition-all shadow-sm"
+        className="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-300 text-slate-600 hover:bg-slate-100 transition-all shadow-sm"
         aria-label={`Aumentar ${label}`}
       >
         <Plus className="w-4 h-4" />
-      </button>
+      </motion.button>
     </div>
   </div>
 );

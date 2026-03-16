@@ -5,6 +5,7 @@
 
 import { useState } from 'react';
 import { Calculator, PieChart, Lightbulb, Zap, Settings, TrendingDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Appliance, BillConfig, TariffFlag } from './types';
 import { COMMON_APPLIANCES, TARIFF_FLAGS } from './constants';
 import { calculateTotalConsumption, calculateBill, formatCurrency } from './utils';
@@ -63,12 +64,14 @@ export default function App() {
               aria-label="Navegação principal"
             >
               {tabs.map((tab) => (
-                <button
+                <motion.button
                   key={tab.id}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setActiveTab(tab.id as Tab)}
                   aria-label={`Aba ${tab.label}`}
                   aria-current={activeTab === tab.id ? 'page' : undefined}
-                  className={`flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:py-3 rounded-xl transition-all whitespace-nowrap text-sm sm:text-base ${
+                  className={`flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:py-3 rounded-xl transition-colors whitespace-nowrap text-sm sm:text-base ${
                     activeTab === tab.id
                       ? 'bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-200'
                       : 'bg-white lg:bg-transparent text-slate-600 hover:bg-slate-100 border border-slate-200 lg:border-0'
@@ -78,7 +81,7 @@ export default function App() {
                     {tab.icon}
                   </span>
                   {tab.label}
-                </button>
+                </motion.button>
               ))}
             </nav>
 
@@ -104,41 +107,54 @@ export default function App() {
 
             {/* Quick Estimate CTA */}
             <div className="mt-4 hidden lg:block">
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setActiveTab('rapido')}
                 aria-label="Acessar Estimativa Rápida"
                 className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl font-medium transition-colors shadow-sm"
               >
                 <TrendingDown className="w-5 h-5" />
                 Estimativa Rápida
-              </button>
+              </motion.button>
             </div>
           </div>
 
           {/* Main Content Area */}
           <div className="lg:col-span-9">
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 min-h-[500px]">
-              {activeTab === 'simulador' && (
-                <ApplianceList appliances={appliances} setAppliances={setAppliances} />
-              )}
-              {activeTab === 'conta' && (
-                <BillEstimate 
-                  appliances={appliances} 
-                  billConfig={billConfig} 
-                  setBillConfig={setBillConfig} 
-                  totalConsumption={totalConsumption}
-                  bill={bill}
-                />
-              )}
-              {activeTab === 'grafico' && (
-                <ConsumptionChart appliances={appliances} totalConsumption={totalConsumption} />
-              )}
-              {activeTab === 'dicas' && (
-                <SavingsTips appliances={appliances} />
-              )}
-              {activeTab === 'rapido' && (
-                <QuickEstimate />
-              )}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 min-h-[500px] overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="h-full"
+                >
+                  {activeTab === 'simulador' && (
+                    <ApplianceList appliances={appliances} setAppliances={setAppliances} />
+                  )}
+                  {activeTab === 'conta' && (
+                    <BillEstimate 
+                      appliances={appliances} 
+                      billConfig={billConfig} 
+                      setBillConfig={setBillConfig} 
+                      totalConsumption={totalConsumption}
+                      bill={bill}
+                    />
+                  )}
+                  {activeTab === 'grafico' && (
+                    <ConsumptionChart appliances={appliances} totalConsumption={totalConsumption} />
+                  )}
+                  {activeTab === 'dicas' && (
+                    <SavingsTips appliances={appliances} />
+                  )}
+                  {activeTab === 'rapido' && (
+                    <QuickEstimate />
+                  )}
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
 

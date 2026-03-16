@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { Appliance, BillConfig, TariffFlag } from '../types';
 import { TARIFF_FLAGS } from '../constants';
 import { formatCurrency, formatNumber } from '../utils';
@@ -43,7 +44,11 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
         {/* Configuration Panel */}
-        <div className="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-200">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-200"
+        >
           <h3 className="text-sm font-semibold text-slate-600 mb-5 uppercase tracking-wider">Tarifa e Bandeira</h3>
           
           <div className="space-y-6">
@@ -70,8 +75,9 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {(['monofasico', 'bifasico', 'trifasico'] as const).map((type) => (
-                  <label 
+                  <motion.label 
                     key={type} 
+                    whileTap={{ scale: 0.95 }}
                     className={`flex items-center justify-center p-3 rounded-xl border cursor-pointer transition-all text-sm ${
                       billConfig.connectionType === type 
                         ? 'border-indigo-500 bg-indigo-50 text-indigo-700 font-medium ring-1 ring-indigo-500' 
@@ -87,7 +93,7 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                       className="sr-only"
                     />
                     <span className="capitalize">{type.replace('fasico', 'fásico')}</span>
-                  </label>
+                  </motion.label>
                 ))}
               </div>
               <p className="text-xs text-slate-500 mt-2">Define o custo de disponibilidade (mínimo faturável).</p>
@@ -126,8 +132,9 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
               </label>
               <div className="grid grid-cols-1 gap-2">
                 {(Object.entries(TARIFF_FLAGS) as [TariffFlag, typeof TARIFF_FLAGS[TariffFlag]][]).map(([key, flag]) => (
-                  <label 
+                  <motion.label 
                     key={key} 
+                    whileTap={{ scale: 0.98 }}
                     className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
                       billConfig.flag === key 
                         ? `border-${getFlagColorName(flag.color)}-500 ${flag.bg} ring-1 ring-${getFlagColorName(flag.color)}-500` 
@@ -156,15 +163,19 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                         + {formatCurrency(flag.extraPer100kWh)}
                       </span>
                     )}
-                  </label>
+                  </motion.label>
                 ))}
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Bill Breakdown */}
-        <div className="flex flex-col justify-start">
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex flex-col justify-start"
+        >
           <div className="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
             {/* Decorative background elements */}
             <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full blur-2xl"></div>
@@ -232,7 +243,7 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
           <p className="text-xs text-slate-400 text-center mt-4 px-4 leading-relaxed">
             * O valor estimado é calculado como: (Consumo Faturado × Tarifa) + Tributos (ICMS, PIS e COFINS).
           </p>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
