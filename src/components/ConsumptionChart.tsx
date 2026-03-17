@@ -105,8 +105,8 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
         </div>
       </div>
       
-      <div className="flex flex-col md:flex-row gap-8 items-start">
-        <div className="flex-1 h-[400px] md:h-[550px] w-full min-w-0">
+      <div className="flex flex-col lg:flex-row gap-8 items-start">
+        <div className="flex-1 h-[400px] md:h-[500px] lg:h-[400px] w-full min-w-0">
           <ResponsiveContainer width="100%" height="100%">
             {chartType === 'pie' ? (
               <PieChart margin={{ top: 20, right: 20, bottom: 40, left: 20 }}>
@@ -114,8 +114,8 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
                   data={data}
                   cx="50%"
                   cy="45%"
-                  innerRadius={window.innerWidth < 768 ? 60 : 90}
-                  outerRadius={window.innerWidth < 768 ? 100 : 160}
+                  innerRadius={window.innerWidth < 768 ? 60 : window.innerWidth < 1024 ? 90 : 72}
+                  outerRadius={window.innerWidth < 768 ? 100 : window.innerWidth < 1024 ? 160 : 126}
                   paddingAngle={2}
                   dataKey="value"
                   stroke="none"
@@ -130,12 +130,24 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
                   ))}
                 </Pie>
                 <Tooltip content={<CustomTooltip />} />
-                <Legend verticalAlign="bottom" wrapperStyle={{ paddingTop: '20px', fontSize: '12px' }} />
+                <Legend 
+                  verticalAlign="bottom" 
+                  wrapperStyle={{ 
+                    paddingTop: '20px', 
+                    fontSize: '12px' 
+                  }} 
+                />
               </PieChart>
             ) : chartType === 'bar' ? (
               <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: window.innerWidth < 768 ? 80 : 120 }} onClick={handleChartClick}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis dataKey="name" angle={-45} textAnchor="end" height={window.innerWidth < 768 ? 80 : 120} tick={{ fontSize: 10, fill: '#64748b' }} />
+                <XAxis 
+                  dataKey="name" 
+                  angle={-45} 
+                  textAnchor="end" 
+                  height={window.innerWidth < 768 ? 80 : 120} 
+                  tick={{ fontSize: 10, fill: '#64748b' }} 
+                />
                 <YAxis tick={{ fontSize: 12, fill: '#64748b' }} />
                 <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f1f5f9' }} />
                 <Bar dataKey="value" radius={[4, 4, 0, 0]}>
@@ -151,7 +163,13 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
             ) : (
               <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: window.innerWidth < 768 ? 80 : 120 }} onClick={handleChartClick}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis dataKey="name" angle={-45} textAnchor="end" height={window.innerWidth < 768 ? 80 : 120} tick={{ fontSize: 10, fill: '#64748b' }} />
+                <XAxis 
+                  dataKey="name" 
+                  angle={-45} 
+                  textAnchor="end" 
+                  height={window.innerWidth < 768 ? 80 : 120} 
+                  tick={{ fontSize: 10, fill: '#64748b' }} 
+                />
                 <YAxis tick={{ fontSize: 12, fill: '#64748b' }} />
                 <Tooltip content={<CustomTooltip />} />
                 <Line 
