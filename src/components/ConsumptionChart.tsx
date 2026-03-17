@@ -59,7 +59,21 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
   return (
     <div className="p-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <h2 className="text-xl font-bold text-slate-800">Distribuição de Consumo</h2>
+        <div className="flex items-center gap-3">
+          <h2 className="text-xl font-bold text-slate-800">Distribuição de Consumo</h2>
+          {selectedApplianceName && (
+            <motion.button 
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setSelectedApplianceName(null)}
+              className="px-2 py-1 bg-indigo-100 text-indigo-600 text-xs font-bold rounded-md hover:bg-indigo-200 transition-colors"
+            >
+              Limpar Seleção
+            </motion.button>
+          )}
+        </div>
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center gap-2 text-sm text-slate-500 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
             <Info className="w-4 h-4" />
@@ -158,22 +172,33 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
             {data.slice(0, 6).map((item, index) => {
               const percent = ((item.value / totalConsumption) * 100).toFixed(1);
+              const isSelected = selectedApplianceName === item.name;
               return (
-                <div key={index} className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100 md:bg-transparent md:p-0 md:border-0">
+                <motion.button 
+                  key={index} 
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setSelectedApplianceName(isSelected ? null : item.name)}
+                  className={`flex items-center justify-between w-full p-3 rounded-xl border transition-all text-left ${
+                    isSelected 
+                      ? 'bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-200' 
+                      : 'bg-white border-slate-100 hover:border-indigo-200 text-slate-700'
+                  }`}
+                >
                   <div className="flex items-center gap-3">
                     <div 
-                      className="w-3 h-3 rounded-full shrink-0" 
-                      style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                      className={`w-3 h-3 rounded-full shrink-0 ${isSelected ? 'bg-white' : ''}`} 
+                      style={isSelected ? {} : { backgroundColor: COLORS[index % COLORS.length] }}
                     />
-                    <span className="text-sm font-medium text-slate-700 truncate max-w-[140px]" title={item.name}>
+                    <span className={`text-sm font-medium truncate max-w-[140px] ${isSelected ? 'text-white' : 'text-slate-700'}`} title={item.name}>
                       {item.name}
                     </span>
                   </div>
                   <div className="text-right">
-                    <span className="text-sm font-bold text-slate-900">{percent}%</span>
-                    <span className="text-xs text-slate-500 block">{item.value.toFixed(1)} kWh</span>
+                    <span className={`text-sm font-bold block ${isSelected ? 'text-white' : 'text-slate-900'}`}>{percent}%</span>
+                    <span className={`text-xs block ${isSelected ? 'text-indigo-100' : 'text-slate-500'}`}>{item.value.toFixed(1)} kWh</span>
                   </div>
-                </div>
+                </motion.button>
               );
             })}
           </div>
