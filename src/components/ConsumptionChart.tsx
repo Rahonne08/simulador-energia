@@ -205,8 +205,8 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
         </div>
       </div>
 
-      {/* Selected Appliance Details */}
-      <AnimatePresence mode="wait">
+      {/* Selected Appliance Details Modal */}
+      <AnimatePresence>
         {selectedApplianceName && (() => {
           const selectedAppliance = appliances.find(app => app.name === selectedApplianceName);
           if (!selectedAppliance) return null;
@@ -216,63 +216,103 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
           const dailyConsumption = (selectedAppliance.power * selectedAppliance.hoursPerDay * selectedAppliance.quantity) / 1000;
 
           return (
-            <motion.div 
-              key={selectedApplianceName}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.2 }}
-              className="mt-8 bg-indigo-50/50 border border-indigo-100 rounded-2xl p-6 relative"
-            >
-              <motion.button 
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 onClick={() => setSelectedApplianceName(null)}
-                className="absolute top-4 right-4 p-2 text-indigo-400 hover:text-indigo-600 hover:bg-indigo-100 rounded-full transition-colors"
+                className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+              />
+              
+              <motion.div 
+                key={selectedApplianceName}
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden relative z-10 border border-slate-200"
               >
-                <X className="w-5 h-5" />
-              </motion.button>
-              
-              <h3 className="text-lg font-bold text-indigo-900 mb-4 flex items-center gap-2">
-                Detalhes: {selectedAppliance.name}
-              </h3>
-              
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                <div className="bg-white p-4 rounded-xl border border-indigo-50 shadow-sm">
-                  <p className="text-xs text-slate-500 uppercase font-semibold mb-1 tracking-wider">Quantidade</p>
-                  <p className="text-xl font-bold text-slate-800">{selectedAppliance.quantity}</p>
+                <div className="bg-indigo-600 p-6 text-white relative">
+                  <motion.button 
+                    whileHover={{ scale: 1.1, rotate: 90 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setSelectedApplianceName(null)}
+                    className="absolute top-6 right-6 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </motion.button>
+                  
+                  <h3 className="text-2xl font-bold flex items-center gap-3">
+                    <Info className="w-6 h-6" />
+                    {selectedAppliance.name}
+                  </h3>
+                  <p className="text-indigo-100 mt-1">Detalhamento técnico e impacto no consumo</p>
                 </div>
-                <div className="bg-white p-4 rounded-xl border border-indigo-50 shadow-sm">
-                  <p className="text-xs text-slate-500 uppercase font-semibold mb-1 tracking-wider">Potência</p>
-                  <p className="text-xl font-bold text-slate-800">{selectedAppliance.power} <span className="text-sm font-medium text-slate-500">W</span></p>
+
+                <div className="p-6 sm:p-8">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                      <p className="text-[10px] text-slate-500 uppercase font-bold mb-1 tracking-widest">Quantidade</p>
+                      <p className="text-2xl font-black text-slate-800">{selectedAppliance.quantity}</p>
+                    </div>
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                      <p className="text-[10px] text-slate-500 uppercase font-bold mb-1 tracking-widest">Potência</p>
+                      <p className="text-2xl font-black text-slate-800">{selectedAppliance.power}<span className="text-sm font-bold text-slate-400 ml-1">W</span></p>
+                    </div>
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                      <p className="text-[10px] text-slate-500 uppercase font-bold mb-1 tracking-widest">Uso Diário</p>
+                      <p className="text-2xl font-black text-slate-800">{selectedAppliance.hoursPerDay}<span className="text-sm font-bold text-slate-400 ml-1">h</span></p>
+                    </div>
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                      <p className="text-[10px] text-slate-500 uppercase font-bold mb-1 tracking-widest">Dias/Mês</p>
+                      <p className="text-2xl font-black text-slate-800">{selectedAppliance.daysPerMonth}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 bg-indigo-50 rounded-2xl border border-indigo-100">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                          <BarChart3 className="w-5 h-5 text-indigo-600" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-indigo-400 uppercase tracking-wider">Consumo Mensal</p>
+                          <p className="text-xl font-black text-indigo-900">{consumption.toFixed(1)} kWh</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs font-bold text-indigo-400 uppercase tracking-wider">Impacto Total</p>
+                        <p className="text-3xl font-black text-indigo-600">{percent}%</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50">
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Consumo Diário</p>
+                        <p className="text-lg font-bold text-slate-700">{dailyConsumption.toFixed(2)} kWh</p>
+                      </div>
+                      <div className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50">
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Custo Estimado (Mês)</p>
+                        <p className="text-lg font-bold text-emerald-600">
+                          R$ {(consumption * 0.92).toFixed(2)}
+                          <span className="text-[10px] text-slate-400 font-normal ml-1 block">*Baseado em R$ 0,92/kWh</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setSelectedApplianceName(null)}
+                    className="w-full mt-8 py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-colors shadow-lg shadow-slate-200"
+                  >
+                    Fechar Detalhes
+                  </motion.button>
                 </div>
-                <div className="bg-white p-4 rounded-xl border border-indigo-50 shadow-sm">
-                  <p className="text-xs text-slate-500 uppercase font-semibold mb-1 tracking-wider">Uso Diário</p>
-                  <p className="text-xl font-bold text-slate-800">{selectedAppliance.hoursPerDay} <span className="text-sm font-medium text-slate-500">h</span></p>
-                </div>
-                <div className="bg-white p-4 rounded-xl border border-indigo-50 shadow-sm">
-                  <p className="text-xs text-slate-500 uppercase font-semibold mb-1 tracking-wider">Dias/Mês</p>
-                  <p className="text-xl font-bold text-slate-800">{selectedAppliance.daysPerMonth}</p>
-                </div>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-5 rounded-xl border border-indigo-100 shadow-sm">
-                <div>
-                  <p className="text-xs text-slate-500 uppercase font-semibold mb-1 tracking-wider">Consumo Diário</p>
-                  <p className="text-lg font-bold text-slate-700">{dailyConsumption.toFixed(2)} <span className="text-sm font-medium text-slate-500">kWh</span></p>
-                </div>
-                <div className="hidden sm:block w-px h-10 bg-slate-200"></div>
-                <div>
-                  <p className="text-xs text-slate-500 uppercase font-semibold mb-1 tracking-wider">Consumo Mensal Total</p>
-                  <p className="text-2xl font-black text-indigo-600">{consumption.toFixed(1)} <span className="text-base font-bold text-indigo-400">kWh</span></p>
-                </div>
-                <div className="hidden sm:block w-px h-10 bg-slate-200"></div>
-                <div className="sm:text-right">
-                  <p className="text-xs text-slate-500 uppercase font-semibold mb-1 tracking-wider">Impacto no Total</p>
-                  <p className="text-2xl font-black text-emerald-500">{percent}%</p>
-                </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           );
         })()}
       </AnimatePresence>
