@@ -24,6 +24,8 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
   const [compareApp1, setCompareApp1] = useState<string>(COMMON_APPLIANCES[0].name);
   const [compareApp2, setCompareApp2] = useState<string>(COMMON_APPLIANCES[1].name);
 
+  const totalConsumption = appliances.reduce((acc, app) => acc + calculateConsumption(app), 0);
+
   const handleAdd = () => {
     if (!newAppliance.name || !newAppliance.power || !newAppliance.hoursPerDay) return;
     
@@ -179,6 +181,7 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                 <th className="pb-3 font-medium">Uso</th>
                 <th className="pb-3 font-medium">Consumo Diário</th>
                 <th className="pb-3 font-medium">Consumo Mensal</th>
+                <th className="pb-3 font-medium">Consumo Anual</th>
                 <th className="pb-3 font-medium text-right">Ação</th>
               </tr>
             </thead>
@@ -191,7 +194,7 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    <td colSpan={7} className="py-8 text-center text-slate-500">
+                    <td colSpan={8} className="py-8 text-center text-slate-500">
                       Nenhum aparelho adicionado.
                     </td>
                   </motion.tr>
@@ -199,6 +202,8 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                   appliances.map(app => {
                     const monthlyConsumption = calculateConsumption(app);
                     const dailyConsumption = (app.power * app.hoursPerDay * app.quantity) / 1000;
+                    const annualConsumption = monthlyConsumption * 12;
+                    const percent = totalConsumption > 0 ? (monthlyConsumption / totalConsumption) * 100 : 0;
                     
                     return (
                       <motion.tr 
@@ -207,9 +212,34 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, x: -20 }}
                         transition={{ duration: 0.2 }}
-                        className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors"
+                        className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors group"
                       >
-                        <td className="py-4 font-medium text-slate-800">{app.name}</td>
+                        <td className="py-4 font-medium text-slate-800">
+                          <div className="flex items-center gap-2">
+                            {app.name}
+                            <div className="relative group/tooltip">
+                              <Info className="w-3.5 h-3.5 text-slate-300 group-hover/tooltip:text-indigo-500 cursor-help transition-colors" />
+                              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tooltip:block z-50 w-48 p-3 bg-slate-900 text-white text-[10px] rounded-xl shadow-xl pointer-events-none">
+                                <div className="space-y-1.5">
+                                  <p className="font-bold border-b border-slate-700 pb-1 mb-1 text-indigo-400 uppercase tracking-wider">Impacto no Consumo</p>
+                                  <div className="flex justify-between">
+                                    <span className="text-slate-400">Mensal:</span>
+                                    <span className="font-bold">{monthlyConsumption.toFixed(1)} kWh</span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-slate-400">Anual:</span>
+                                    <span className="font-bold">{annualConsumption.toFixed(1)} kWh</span>
+                                  </div>
+                                  <div className="flex justify-between pt-1 border-t border-slate-700">
+                                    <span className="text-slate-400">Percentual:</span>
+                                    <span className="font-bold text-emerald-400">{percent.toFixed(1)}%</span>
+                                  </div>
+                                </div>
+                                <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
                         <td className="py-4 text-slate-600">{app.quantity}</td>
                         <td className="py-4 text-slate-600">{app.power} W</td>
                         <td className="py-4 text-slate-600">{app.hoursPerDay}h/dia × {app.daysPerMonth} dias</td>
@@ -221,6 +251,9 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                             <Zap className="w-4 h-4" />
                             {monthlyConsumption.toFixed(1)} kWh
                           </div>
+                        </td>
+                        <td className="py-4 text-slate-600">
+                          {annualConsumption.toFixed(0)} kWh
                         </td>
                         <td className="py-4 text-right">
                           <motion.button 
@@ -259,6 +292,8 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
               appliances.map(app => {
                 const monthlyConsumption = calculateConsumption(app);
                 const dailyConsumption = (app.power * app.hoursPerDay * app.quantity) / 1000;
+                const annualConsumption = monthlyConsumption * 12;
+                const percent = totalConsumption > 0 ? (monthlyConsumption / totalConsumption) * 100 : 0;
                 
                 return (
                   <motion.div 
@@ -279,7 +314,30 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                       <Trash2 className="w-4 h-4" />
                     </motion.button>
                     
-                    <h4 className="font-bold text-slate-800 mb-3 pr-8">{app.name}</h4>
+                    <div className="flex items-center gap-2 mb-3 pr-8">
+                      <h4 className="font-bold text-slate-800">{app.name}</h4>
+                      <div className="relative group/tooltip">
+                        <Info className="w-3.5 h-3.5 text-slate-300 group-hover/tooltip:text-indigo-500 cursor-help transition-colors" />
+                        <div className="absolute bottom-full left-0 mb-2 hidden group-hover/tooltip:block z-50 w-48 p-3 bg-slate-900 text-white text-[10px] rounded-xl shadow-xl pointer-events-none">
+                          <div className="space-y-1.5">
+                            <p className="font-bold border-b border-slate-700 pb-1 mb-1 text-indigo-400 uppercase tracking-wider">Impacto no Consumo</p>
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">Mensal:</span>
+                              <span className="font-bold">{monthlyConsumption.toFixed(1)} kWh</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">Anual:</span>
+                              <span className="font-bold">{annualConsumption.toFixed(1)} kWh</span>
+                            </div>
+                            <div className="flex justify-between pt-1 border-t border-slate-700">
+                              <span className="text-slate-400">Percentual:</span>
+                              <span className="font-bold text-emerald-400">{percent.toFixed(1)}%</span>
+                            </div>
+                          </div>
+                          <div className="absolute top-full left-2 border-4 border-transparent border-t-slate-900"></div>
+                        </div>
+                      </div>
+                    </div>
                     
                     <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
                       <div>
@@ -300,6 +358,10 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                           <Zap className="w-3 h-3" />
                           {monthlyConsumption.toFixed(1)} kWh
                         </p>
+                      </div>
+                      <div className="col-span-2 pt-2 border-t border-slate-100">
+                        <p className="text-slate-500 text-xs uppercase font-semibold tracking-wider mb-0.5">Consumo Anual Estimado</p>
+                        <p className="text-slate-900 font-bold text-base">{annualConsumption.toFixed(0)} kWh/ano</p>
                       </div>
                     </div>
                   </motion.div>

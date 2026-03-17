@@ -287,17 +287,21 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50">
                         <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Consumo Diário</p>
-                        <p className="text-lg font-bold text-slate-700">{dailyConsumption.toFixed(2)} kWh</p>
+                        <p className="text-lg font-bold text-slate-700">{dailyConsumption.toFixed(2)} <span className="text-xs font-normal">kWh</span></p>
                       </div>
                       <div className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50">
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Custo Estimado (Mês)</p>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Consumo Anual</p>
+                        <p className="text-lg font-bold text-indigo-600">{(consumption * 12).toFixed(0)} <span className="text-xs font-normal">kWh</span></p>
+                      </div>
+                      <div className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50">
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Custo Mensal</p>
                         <p className="text-lg font-bold text-emerald-600">
                           R$ {(consumption * 0.92).toFixed(2)}
-                          <span className="text-[10px] text-slate-400 font-normal ml-1 block">*Baseado em R$ 0,92/kWh</span>
                         </p>
+                        <span className="text-[10px] text-slate-400 font-normal block leading-none mt-1">*R$ 0,92/kWh</span>
                       </div>
                     </div>
                   </div>
