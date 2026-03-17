@@ -35,8 +35,8 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-8">
-        <h2 className="text-xl font-bold text-slate-800">Estimativa da Conta</h2>
-        <div className="flex items-center gap-2 text-sm text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">
+        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Estimativa da Conta</h2>
+        <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-900 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-800">
           <Settings className="w-4 h-4" />
           Configuração Tarifária
         </div>
@@ -47,15 +47,15 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-200"
+          className="bg-slate-50 dark:bg-slate-900/50 p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800"
         >
-          <h3 className="text-sm font-semibold text-slate-600 mb-5 uppercase tracking-wider">Tarifa e Bandeira</h3>
+          <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-5 uppercase tracking-wider">Tarifa e Bandeira</h3>
           
           <div className="space-y-6">
-            <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200">
+            <div className="flex items-center justify-between p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
               <div className="pr-4">
-                <h4 className="font-medium text-slate-800">Cliente Baixa Renda</h4>
-                <p className="text-xs text-slate-500 mt-1">Tarifa Social (até 80 kWh grátis)</p>
+                <h4 className="font-medium text-slate-800 dark:text-slate-100">Cliente Baixa Renda</h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Tarifa Social (até 80 kWh grátis)</p>
               </div>
               <label className="relative inline-flex items-center cursor-pointer shrink-0">
                 <input 
@@ -65,12 +65,12 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                   onChange={(e) => setBillConfig({ ...billConfig, isLowIncome: e.target.checked })}
                   aria-label="Ativar Tarifa Social para Cliente Baixa Renda"
                 />
-                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                <div className="w-11 h-6 bg-slate-200 dark:bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-900 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 dark:after:border-slate-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
               </label>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Tipo de Conexão
               </label>
               <div className="grid grid-cols-3 gap-2">
@@ -80,8 +80,8 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                     whileTap={{ scale: 0.95 }}
                     className={`flex items-center justify-center p-3 rounded-xl border cursor-pointer transition-all text-sm ${
                       billConfig.connectionType === type 
-                        ? 'border-indigo-500 bg-indigo-50 text-indigo-700 font-medium ring-1 ring-indigo-500' 
-                        : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                        ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 font-medium ring-1 ring-indigo-500' 
+                        : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
                     }`}
                   >
                     <input 
@@ -96,38 +96,38 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                   </motion.label>
                 ))}
               </div>
-              <p className="text-xs text-slate-500 mt-2">Define o custo de disponibilidade (mínimo faturável).</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">Define o custo de disponibilidade (mínimo faturável).</p>
             </div>
 
             {!billConfig.isLowIncome && (
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Tarifa de Energia (R$/kWh)
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">R$</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400">R$</span>
                   <input 
                     type="number" 
                     step="0.01"
                     value={billConfig.tariff}
                     onChange={e => setBillConfig({ ...billConfig, tariff: Number(e.target.value) })}
-                    className="w-full rounded-xl border-slate-300 border py-3 pl-10 pr-4 text-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-shadow text-lg font-semibold"
+                    className="w-full rounded-xl border-slate-300 dark:border-slate-700 border py-3 pl-10 pr-4 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-shadow text-lg font-semibold"
                   />
                 </div>
-                <p className="text-xs text-slate-500 mt-2">Valor cobrado pela distribuidora por cada kWh consumido.</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">Valor cobrado pela distribuidora por cada kWh consumido.</p>
               </div>
             )}
 
             {billConfig.isLowIncome && (
-              <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-                <p className="text-sm text-emerald-800">
+              <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-100 dark:border-emerald-900/30">
+                <p className="text-sm text-emerald-800 dark:text-emerald-400">
                   <strong>Regra Tarifa Social:</strong> Os primeiros 80 kWh são gratuitos (100% de desconto). O consumo acima de 80 kWh será cobrado com a tarifa normal.
                 </p>
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Bandeira Tarifária Atual
               </label>
               <div className="grid grid-cols-1 gap-2">
@@ -138,7 +138,7 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                     className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
                       billConfig.flag === key 
                         ? `border-${getFlagColorName(flag.color)}-500 ${flag.bg} ring-1 ring-${getFlagColorName(flag.color)}-500` 
-                        : 'border-slate-200 hover:bg-slate-50'
+                        : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -152,14 +152,14 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                             setBillConfig({ ...billConfig, flag: key as TariffFlag });
                           }
                         }}
-                        className="w-5 h-5 text-indigo-600 focus:ring-indigo-500 border-slate-300"
+                        className="w-5 h-5 text-indigo-600 focus:ring-indigo-500 border-slate-300 dark:border-slate-600"
                       />
-                      <span className={`font-medium ${billConfig.flag === key ? flag.color : 'text-slate-700'}`}>
+                      <span className={`font-medium ${billConfig.flag === key ? flag.color : 'text-slate-700 dark:text-slate-300'}`}>
                         {flag.label}
                       </span>
                     </div>
                     {flag.extraPer100kWh > 0 && (
-                      <span className="text-xs font-medium text-slate-500 bg-white px-2 py-1 rounded-md shadow-sm border border-slate-100 whitespace-nowrap">
+                      <span className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-800 px-2 py-1 rounded-md shadow-sm border border-slate-100 dark:border-slate-700 whitespace-nowrap">
                         + {formatCurrency(flag.extraPer100kWh)}
                       </span>
                     )}
@@ -240,7 +240,7 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
             </div>
           </div>
           
-          <p className="text-xs text-slate-400 text-center mt-4 px-4 leading-relaxed">
+          <p className="text-xs text-slate-400 dark:text-slate-500 text-center mt-4 px-4 leading-relaxed">
             * O valor estimado é calculado como: (Consumo Faturado × Tarifa) + Tributos (ICMS, PIS e COFINS).
           </p>
         </motion.div>

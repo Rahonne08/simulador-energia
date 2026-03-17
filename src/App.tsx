@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState } from 'react';
-import { Calculator, PieChart, Lightbulb, Zap, Settings, TrendingDown } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Calculator, PieChart, Lightbulb, Zap, Settings, TrendingDown, Moon, Sun } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Appliance, BillConfig, TariffFlag } from './types';
 import { COMMON_APPLIANCES, TARIFF_FLAGS } from './constants';
@@ -20,6 +20,23 @@ type Tab = 'simulador' | 'conta' | 'grafico' | 'dicas' | 'rapido';
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('simulador');
   const [appliances, setAppliances] = useState<Appliance[]>([]);
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('darkMode');
+      return saved ? JSON.parse(saved) : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('darkMode', JSON.stringify(darkMode));
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
+
   const [billConfig, setBillConfig] = useState<BillConfig>({
     tariff: 0.84318,
     flag: 'verde',
@@ -39,16 +56,27 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
-      <header className="bg-indigo-600 text-white shadow-md sticky top-0 z-50">
+    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'} font-sans`}>
+      <header className="bg-indigo-600 dark:bg-indigo-900 text-white shadow-md sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 py-4 sm:py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 sm:gap-3">
               <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-300" />
               <h1 className="text-lg sm:text-2xl font-bold tracking-tight">EcoPower</h1>
             </div>
-            <div className="lg:hidden flex items-center gap-2 bg-indigo-700 px-3 py-1.5 rounded-full">
-              <span className="text-xs font-bold">{formatCurrency(bill.total)}</span>
+            <div className="flex items-center gap-3">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setDarkMode(!darkMode)}
+                className="p-2 rounded-full bg-indigo-500/30 hover:bg-indigo-500/50 transition-colors"
+                aria-label="Alternar tema"
+              >
+                {darkMode ? <Sun className="w-5 h-5 text-yellow-300" /> : <Moon className="w-5 h-5 text-indigo-100" />}
+              </motion.button>
+              <div className="lg:hidden flex items-center gap-2 bg-indigo-700 dark:bg-indigo-800 px-3 py-1.5 rounded-full">
+                <span className="text-xs font-bold">{formatCurrency(bill.total)}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -60,7 +88,7 @@ export default function App() {
           {/* Sidebar Navigation */}
           <div className="lg:col-span-3">
             <nav 
-              className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0 no-scrollbar sticky top-[72px] lg:top-auto bg-slate-50 lg:bg-transparent z-40"
+              className={`flex flex-row lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0 no-scrollbar sticky top-[72px] lg:top-auto ${darkMode ? 'bg-slate-950' : 'bg-slate-50'} lg:bg-transparent z-40`}
               aria-label="Navegação principal"
             >
               {tabs.map((tab) => (
@@ -73,11 +101,11 @@ export default function App() {
                   aria-current={activeTab === tab.id ? 'page' : undefined}
                   className={`flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:py-3 rounded-xl transition-colors whitespace-nowrap text-sm sm:text-base ${
                     activeTab === tab.id
-                      ? 'bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-200'
-                      : 'bg-white lg:bg-transparent text-slate-600 hover:bg-slate-100 border border-slate-200 lg:border-0'
+                      ? 'bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-200 dark:shadow-indigo-900/50'
+                      : `bg-white dark:bg-slate-900 lg:bg-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 lg:border-0`
                   }`}
                 >
-                  <span className={activeTab === tab.id ? 'text-white' : 'text-indigo-600'}>
+                  <span className={activeTab === tab.id ? 'text-white' : 'text-indigo-600 dark:text-indigo-400'}>
                     {tab.icon}
                   </span>
                   {tab.label}
@@ -86,19 +114,19 @@ export default function App() {
             </nav>
 
             {/* Summary Card */}
-            <div className="mt-8 bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hidden lg:block">
-              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Resumo Mensal</h3>
+            <div className="mt-8 bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-800 hidden lg:block">
+              <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">Resumo Mensal</h3>
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm text-slate-500">Consumo Total</p>
-                  <p className="text-2xl font-bold text-slate-800">{totalConsumption.toFixed(0)} <span className="text-base font-normal text-slate-500">kWh</span></p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">Consumo Total</p>
+                  <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{totalConsumption.toFixed(0)} <span className="text-base font-normal text-slate-500 dark:text-slate-400">kWh</span></p>
                 </div>
                 <div>
-                  <p className="text-sm text-slate-500">Valor Estimado</p>
-                  <p className="text-2xl font-bold text-emerald-600">{formatCurrency(bill.total)}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">Valor Estimado</p>
+                  <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{formatCurrency(bill.total)}</p>
                 </div>
                 <div>
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${TARIFF_FLAGS[billConfig.flag]?.bg || 'bg-slate-100'} ${TARIFF_FLAGS[billConfig.flag]?.color || 'text-slate-600'}`}>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${TARIFF_FLAGS[billConfig.flag]?.bg || 'bg-slate-100 dark:bg-slate-800'} ${TARIFF_FLAGS[billConfig.flag]?.color || 'text-slate-600 dark:text-slate-300'}`}>
                     {TARIFF_FLAGS[billConfig.flag]?.label || 'Bandeira Desconhecida'}
                   </span>
                 </div>
@@ -112,7 +140,7 @@ export default function App() {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setActiveTab('rapido')}
                 aria-label="Acessar Estimativa Rápida"
-                className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl font-medium transition-colors shadow-sm"
+                className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white px-4 py-3 rounded-xl font-medium transition-colors shadow-sm"
               >
                 <TrendingDown className="w-5 h-5" />
                 Estimativa Rápida
@@ -122,7 +150,7 @@ export default function App() {
 
           {/* Main Content Area */}
           <div className="lg:col-span-9">
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 min-h-[500px] overflow-hidden">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 min-h-[500px] overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTab}
@@ -161,7 +189,7 @@ export default function App() {
         </div>
       </main>
 
-      <footer className="max-w-5xl mx-auto px-4 py-8 text-center text-sm font-medium text-slate-500 uppercase tracking-wider">
+      <footer className="max-w-5xl mx-auto px-4 py-8 text-center text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
         Desenvolvido por Pablo Rahonne
       </footer>
     </div>
