@@ -41,7 +41,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
-      <header className="bg-indigo-600 text-white shadow-md sticky top-0 z-50">
+      <header className="bg-indigo-600 text-white shadow-md z-50 relative">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 sm:gap-3">
@@ -63,7 +63,7 @@ export default function App() {
           {/* Sidebar Navigation */}
           <div className="lg:col-span-3">
             <nav 
-              className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0 no-scrollbar sticky top-[72px] lg:top-auto bg-slate-50 lg:bg-transparent z-40"
+              className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0 no-scrollbar sticky top-0 lg:top-auto bg-slate-50 lg:bg-transparent z-40 pt-2 lg:pt-0"
               aria-label="Navegação principal"
             >
               {tabs.map((tab) => (
