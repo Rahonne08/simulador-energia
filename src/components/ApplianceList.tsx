@@ -238,6 +238,10 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                                 <div className="space-y-1.5">
                                   <p className="font-bold border-b border-slate-700 pb-1 mb-1 text-indigo-400 uppercase tracking-wider">Impacto no Consumo</p>
                                   <div className="flex justify-between">
+                                    <span className="text-slate-400">Diário:</span>
+                                    <span className="font-bold">{dailyConsumption.toFixed(2)} kWh</span>
+                                  </div>
+                                  <div className="flex justify-between">
                                     <span className="text-slate-400">Mensal:</span>
                                     <span className="font-bold">{monthlyConsumption.toFixed(1)} kWh</span>
                                   </div>
@@ -336,6 +340,10 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                         <div className="absolute bottom-full left-0 mb-2 hidden group-hover/tooltip:block z-50 w-48 p-3 bg-slate-900 text-white text-[10px] rounded-xl shadow-xl pointer-events-none">
                           <div className="space-y-1.5">
                             <p className="font-bold border-b border-slate-700 pb-1 mb-1 text-indigo-400 uppercase tracking-wider">Impacto no Consumo</p>
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">Diário:</span>
+                              <span className="font-bold">{dailyConsumption.toFixed(2)} kWh</span>
+                            </div>
                             <div className="flex justify-between">
                               <span className="text-slate-400">Mensal:</span>
                               <span className="font-bold">{monthlyConsumption.toFixed(1)} kWh</span>
