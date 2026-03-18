@@ -29,15 +29,25 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
   const handleAdd = () => {
     if (!newAppliance.name || !newAppliance.power || !newAppliance.hoursPerDay) return;
     
+    const quantity = Number(newAppliance.quantity) || 1;
+    const power = Number(newAppliance.power);
+    const hoursPerDay = Number(newAppliance.hoursPerDay);
+    const daysPerMonth = Number(newAppliance.daysPerMonth) || 30;
+
+    if (quantity <= 0 || power <= 0 || hoursPerDay <= 0 || daysPerMonth <= 0) {
+      alert("Por favor, insira valores positivos maiores que zero para quantidade, potência, horas por dia e dias por mês.");
+      return;
+    }
+    
     setAppliances([
       ...appliances,
       {
         id: Math.random().toString(36).substr(2, 9),
         name: newAppliance.name,
-        quantity: Number(newAppliance.quantity) || 1,
-        power: Number(newAppliance.power),
-        hoursPerDay: Number(newAppliance.hoursPerDay),
-        daysPerMonth: Number(newAppliance.daysPerMonth) || 30,
+        quantity,
+        power,
+        hoursPerDay,
+        daysPerMonth,
       }
     ]);
     
@@ -128,6 +138,7 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
             <label className="block text-sm font-medium text-slate-700 mb-1">Potência (W)</label>
             <input 
               type="number" 
+              min="0"
               value={newAppliance.power || ''}
               onChange={e => setNewAppliance({...newAppliance, power: Number(e.target.value)})}
               className="w-full rounded-lg border-slate-300 bg-white text-slate-900 border p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
@@ -138,6 +149,8 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
             <label className="block text-sm font-medium text-slate-700 mb-1">Horas/dia</label>
             <input 
               type="number" 
+              min="0"
+              max="24"
               value={newAppliance.hoursPerDay || ''}
               onChange={e => setNewAppliance({...newAppliance, hoursPerDay: Number(e.target.value)})}
               className="w-full rounded-lg border-slate-300 bg-white text-slate-900 border p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
@@ -148,6 +161,8 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
             <label className="block text-sm font-medium text-slate-700 mb-1">Dias/mês</label>
             <input 
               type="number" 
+              min="0"
+              max="31"
               value={newAppliance.daysPerMonth || ''}
               onChange={e => setNewAppliance({...newAppliance, daysPerMonth: Number(e.target.value)})}
               className="w-full rounded-lg border-slate-300 bg-white text-slate-900 border p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
