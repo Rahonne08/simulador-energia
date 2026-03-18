@@ -1,10 +1,10 @@
 import { TariffFlag } from './types';
 
 export const TARIFF_FLAGS: Record<TariffFlag, { label: string; extraPer100kWh: number; color: string; bg: string }> = {
-  verde: { label: 'Bandeira Verde', extraPer100kWh: 0, color: 'text-green-600 dark:text-green-400', bg: 'bg-green-100 dark:bg-green-900/30' },
-  amarela: { label: 'Bandeira Amarela', extraPer100kWh: 1.88, color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-100 dark:bg-yellow-900/30' },
-  vermelha1: { label: 'Bandeira Vermelha P1', extraPer100kWh: 4.46, color: 'text-red-500 dark:text-red-400', bg: 'bg-red-100 dark:bg-red-900/30' },
-  vermelha2: { label: 'Bandeira Vermelha P2', extraPer100kWh: 7.87, color: 'text-red-700 dark:text-red-300', bg: 'bg-red-200 dark:bg-red-900/50' },
+  verde: { label: 'Bandeira Verde', extraPer100kWh: 0, color: 'text-green-600', bg: 'bg-green-100' },
+  amarela: { label: 'Bandeira Amarela', extraPer100kWh: 1.88, color: 'text-yellow-600', bg: 'bg-yellow-100' },
+  vermelha1: { label: 'Bandeira Vermelha P1', extraPer100kWh: 4.46, color: 'text-red-500', bg: 'bg-red-100' },
+  vermelha2: { label: 'Bandeira Vermelha P2', extraPer100kWh: 7.87, color: 'text-red-700', bg: 'bg-red-200' },
 };
 
 export const COMMON_APPLIANCES = [

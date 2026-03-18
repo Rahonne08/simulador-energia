@@ -57,11 +57,17 @@ export default function SavingsTips({ appliances }: Props) {
           desc: `Consome ${consText}. Acumule a maior quantidade de roupas possível para passar tudo de uma vez. O aquecimento inicial do ferro consome muita energia.`,
           type: 'warning'
         });
-      } else if (name.includes('máquina de lavar') || name.includes('lavadora') || name.includes('secadora')) {
+      } else if (name.includes('máquina de lavar') || name.includes('lavadora')) {
         generatedTips.push({
           title: `Otimize a ${app.name}`,
           desc: `Representa ${consText}. Lave o máximo de roupas possível de uma só vez, respeitando a capacidade. Use a dosagem correta de sabão para evitar enxágues extras.`,
           type: 'info'
+        });
+      } else if (name.includes('secadora')) {
+        generatedTips.push({
+          title: `Economize com a ${app.name}`,
+          desc: `Consome ${consText}. Secadoras são grandes consumidoras. Sempre que possível, utilize o varal e a luz solar para secar suas roupas.`,
+          type: 'warning'
         });
       } else if (name.includes('incandescente') || name.includes('lâmpada') || name.includes('iluminação')) {
         generatedTips.push({
@@ -91,6 +97,30 @@ export default function SavingsTips({ appliances }: Props) {
         generatedTips.push({
           title: `Cuidado com o ${app.name}`,
           desc: `Aparelhos que geram calor consomem muita energia (${consText}). Evite abrir a gaveta/porta durante o preparo para não perder calor.`,
+          type: 'warning'
+        });
+      } else if (name.includes('cooktop') || name.includes('fogão')) {
+        generatedTips.push({
+          title: `Dica para o ${app.name}`,
+          desc: `Representa ${consText}. Utilize panelas com fundo plano que cubram toda a área da chapa e use a tampa para acelerar o cozimento.`,
+          type: 'warning'
+        });
+      } else if (name.includes('bomba') || name.includes('motor')) {
+        generatedTips.push({
+          title: `Eficiência na ${app.name}`,
+          desc: `Consome ${consText}. Verifique se não há vazamentos na tubulação que forçam o motor a trabalhar mais tempo desnecessariamente.`,
+          type: 'info'
+        });
+      } else if (name.includes('lava-louças') || name.includes('lava louças')) {
+        generatedTips.push({
+          title: `Otimize a ${app.name}`,
+          desc: `Consome ${consText}. Utilize-a apenas quando estiver com a carga completa e evite a função de secagem extra se possível.`,
+          type: 'info'
+        });
+      } else if (name.includes('boiler') || name.includes('aquecedor')) {
+        generatedTips.push({
+          title: `Ajuste o ${app.name}`,
+          desc: `Responsável por ${consText}. Mantenha o termostato entre 45°C e 50°C e verifique o isolamento térmico do reservatório.`,
           type: 'warning'
         });
       } else {
@@ -142,7 +172,7 @@ export default function SavingsTips({ appliances }: Props) {
       }
     }
 
-    return uniqueTips.slice(0, 4);
+    return uniqueTips.slice(0, 6);
   }, [appliances]);
 
   const containerVariants = {
@@ -164,7 +194,7 @@ export default function SavingsTips({ appliances }: Props) {
     <div className="p-6">
       <div className="flex items-center gap-3 mb-8">
         <Lightbulb className="w-6 h-6 text-amber-500" />
-        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Dicas de Economia Inteligentes</h2>
+        <h2 className="text-xl font-bold text-slate-800">Dicas de Economia Inteligentes</h2>
       </div>
 
       <motion.div 
@@ -178,16 +208,16 @@ export default function SavingsTips({ appliances }: Props) {
             key={index}
             variants={itemVariants}
             className={`p-6 rounded-2xl border ${
-              tip.type === 'warning' ? 'bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-900/30' :
-              tip.type === 'success' ? 'bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-900/30' :
-              'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-900/30'
+              tip.type === 'warning' ? 'bg-amber-50 border-amber-200' :
+              tip.type === 'success' ? 'bg-emerald-50 border-emerald-200' :
+              'bg-blue-50 border-blue-200'
             }`}
           >
             <div className="flex items-start gap-4">
               <div className={`p-2 rounded-full ${
-                tip.type === 'warning' ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400' :
-                tip.type === 'success' ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400' :
-                'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400'
+                tip.type === 'warning' ? 'bg-amber-100 text-amber-600' :
+                tip.type === 'success' ? 'bg-emerald-100 text-emerald-600' :
+                'bg-blue-100 text-blue-600'
               }`}>
                 {tip.type === 'warning' ? <AlertCircle className="w-5 h-5" /> :
                  tip.type === 'success' ? <Lightbulb className="w-5 h-5" /> :
@@ -195,14 +225,14 @@ export default function SavingsTips({ appliances }: Props) {
               </div>
               <div>
                 <h3 className={`font-semibold mb-2 ${
-                  tip.type === 'warning' ? 'text-amber-900 dark:text-amber-200' :
-                  tip.type === 'success' ? 'text-emerald-900 dark:text-emerald-200' :
-                  'text-blue-900 dark:text-blue-200'
+                  tip.type === 'warning' ? 'text-amber-900' :
+                  tip.type === 'success' ? 'text-emerald-900' :
+                  'text-blue-900'
                 }`}>{tip.title}</h3>
                 <p className={`text-sm leading-relaxed ${
-                  tip.type === 'warning' ? 'text-amber-800 dark:text-amber-400' :
-                  tip.type === 'success' ? 'text-emerald-800 dark:text-emerald-400' :
-                  'text-blue-800 dark:text-blue-400'
+                  tip.type === 'warning' ? 'text-amber-800' :
+                  tip.type === 'success' ? 'text-emerald-800' :
+                  'text-blue-800'
                 }`}>{tip.desc}</p>
               </div>
             </div>
@@ -214,18 +244,18 @@ export default function SavingsTips({ appliances }: Props) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="mt-10 bg-slate-900 dark:bg-slate-950 rounded-2xl p-8 text-white relative overflow-hidden border border-transparent dark:border-slate-800"
+        className="mt-10 bg-slate-900 rounded-2xl p-8 text-white relative overflow-hidden border border-transparent"
       >
         <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-indigo-500 opacity-20 rounded-full blur-3xl"></div>
         <h3 className="text-xl font-bold mb-4 relative z-10">Simulação de Troca de Aparelhos</h3>
-        <p className="text-slate-300 dark:text-slate-400 mb-6 max-w-2xl relative z-10">
+        <p className="text-slate-300 mb-6 max-w-2xl relative z-10">
           Veja o impacto financeiro de trocar aparelhos antigos por versões mais eficientes (Selo Procel A).
         </p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
           <motion.div 
             whileHover={{ scale: 1.02 }}
-            className="bg-slate-800/50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-700 dark:border-slate-800 flex items-center justify-between"
+            className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 flex items-center justify-between"
           >
             <div>
               <p className="text-sm text-slate-400">Chuveiro Elétrico</p>
@@ -240,7 +270,7 @@ export default function SavingsTips({ appliances }: Props) {
           
           <motion.div 
             whileHover={{ scale: 1.02 }}
-            className="bg-slate-800/50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-700 dark:border-slate-800 flex items-center justify-between"
+            className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 flex items-center justify-between"
           >
             <div>
               <p className="text-sm text-slate-400">Lâmpada Comum</p>
