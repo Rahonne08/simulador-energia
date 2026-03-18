@@ -123,6 +123,60 @@ export default function SavingsTips({ appliances }: Props) {
           desc: `Responsável por ${consText}. Mantenha o termostato entre 45°C e 50°C e verifique o isolamento térmico do reservatório.`,
           type: 'warning'
         });
+      } else if (name.includes('videogame') || name.includes('console') || name.includes('playstation') || name.includes('xbox')) {
+        generatedTips.push({
+          title: `Uso do ${app.name}`,
+          desc: `Consome ${consText}. Evite deixar o console ligado ou em modo de suspensão baixando jogos quando não estiver usando. Desligue-o completamente.`,
+          type: 'info'
+        });
+      } else if (name.includes('cafeteira')) {
+        generatedTips.push({
+          title: `Dica para a ${app.name}`,
+          desc: `Representa ${consText}. Se a sua cafeteira tiver base aquecedora, não a deixe ligada por muito tempo. É mais econômico armazenar o café em uma garrafa térmica.`,
+          type: 'warning'
+        });
+      } else if (name.includes('secador') || name.includes('chapinha') || name.includes('prancha')) {
+        generatedTips.push({
+          title: `Atenção ao ${app.name}`,
+          desc: `Aparelhos de aquecimento rápido consomem muita energia (${consText}). Seque bem o cabelo com a toalha antes de usar o secador para diminuir o tempo de uso.`,
+          type: 'warning'
+        });
+      } else if (name.includes('aspirador')) {
+        generatedTips.push({
+          title: `Uso eficiente: ${app.name}`,
+          desc: `Consome ${consText}. Limpe os filtros e o reservatório regularmente. Um aspirador com filtro sujo precisa fazer mais força e consome mais energia.`,
+          type: 'info'
+        });
+      } else if (name.includes('purificador') || name.includes('bebedouro')) {
+        generatedTips.push({
+          title: `Ajuste o ${app.name}`,
+          desc: `Responsável por ${consText}. Em dias mais frios, desligue a refrigeração do aparelho ou ajuste o termostato para o mínimo.`,
+          type: 'success'
+        });
+      } else if (name.includes('roteador') || name.includes('modem')) {
+        generatedTips.push({
+          title: `Economia com o ${app.name}`,
+          desc: `Apesar da baixa potência, fica ligado 24h, consumindo ${consText}. Se for viajar ou passar o fim de semana fora, desligue-o da tomada.`,
+          type: 'info'
+        });
+      } else if (name.includes('sanduicheira') || name.includes('grill') || name.includes('torradeira')) {
+        generatedTips.push({
+          title: `Dica para a ${app.name}`,
+          desc: `Consome ${consText}. Ligue o aparelho apenas quando o alimento já estiver pronto para ser colocado, evitando o tempo ocioso de aquecimento.`,
+          type: 'warning'
+        });
+      } else if (name.includes('panela elétrica')) {
+        generatedTips.push({
+          title: `Uso da ${app.name}`,
+          desc: `Representa ${consText}. Mantenha a tampa fechada durante o cozimento e aproveite o calor residual desligando um pouco antes do alimento ficar pronto.`,
+          type: 'success'
+        });
+      } else if (name.includes('som') || name.includes('home theater')) {
+        generatedTips.push({
+          title: `Atenção ao ${app.name}`,
+          desc: `Consome ${consText}. Aparelhos de áudio potentes consomem bastante energia. Desligue-os da tomada quando não estiverem em uso para evitar o consumo em standby.`,
+          type: 'info'
+        });
       } else {
         // Generic tip for high-consuming appliance
         if (app.consumption > 15) {
