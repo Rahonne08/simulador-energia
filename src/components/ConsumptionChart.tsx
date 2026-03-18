@@ -176,16 +176,16 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
                   />
                   {/* Center Label */}
                   <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle">
-                    <tspan x="50%" dy="-1.4em" fontSize={10} fontWeight="bold" fill="#94a3b8" textTransform="uppercase">
+                    <tspan x="50%" dy="-1.2em" fontSize={10} fontWeight="bold" fill="#94a3b8" style={{ textTransform: 'uppercase' }}>
                       {selectedApplianceName ? 'Consumo' : 'Total'}
                     </tspan>
-                    <tspan x="50%" dy="1.4em" fontSize={window.innerWidth < 768 ? 22 : 28} fontWeight="900" fill="#1e293b">
+                    <tspan x="50%" dy="1.2em" fontSize={window.innerWidth < 768 ? 24 : 32} fontWeight="900" fill="#1e293b">
                       {(selectedApplianceName 
                         ? (data.find(d => d.name === selectedApplianceName)?.value || 0) 
                         : totalConsumption
                       ).toFixed(0)}
                     </tspan>
-                    <tspan x="50%" dy="1.6em" fontSize={12} fontWeight="bold" fill="#64748b">
+                    <tspan x="50%" dy="1.2em" fontSize={12} fontWeight="bold" fill="#64748b">
                       kWh/mês
                     </tspan>
                   </text>
