@@ -1,5 +1,5 @@
 {
-  "name": "Simulador de Conta de Energia",
+  "name": "EnerControl 🔋",
   "description": "Estime o consumo dos seus aparelhos, calcule o valor da conta de luz e descubra dicas de economia.",
   "requestFramePermissions": []
 }

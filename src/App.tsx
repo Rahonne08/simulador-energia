@@ -46,7 +46,7 @@ export default function App() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 sm:gap-3">
               <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-300" />
-              <h1 className="text-lg sm:text-2xl font-bold tracking-tight">EcoPower</h1>
+              <h1 className="text-lg sm:text-2xl font-bold tracking-tight">EnerControl 🔋</h1>
             </div>
             <div className="flex items-center gap-3">
               <div className="lg:hidden flex items-center gap-2 bg-indigo-700 px-3 py-1.5 rounded-full">
