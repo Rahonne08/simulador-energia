@@ -165,7 +165,7 @@ export default function App() {
       </main>
 
       <footer className="max-w-7xl mx-auto px-4 py-8 text-center text-sm font-medium text-slate-500 uppercase tracking-wider">
-        Desenvolvido por Pablo Rahonne
+        Desenvolvido por <a href="https://github.com/Rahonne08" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-600 transition-colors underline-offset-4 hover:underline">Pablo Rahonne</a>
       </footer>
     </div>
   );
