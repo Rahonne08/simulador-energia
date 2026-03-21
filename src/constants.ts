@@ -524,6 +524,7 @@ export const COMMON_APPLIANCES = [
   { name: 'Transf Forca 10 KVA', quantity: 1, power: 9200, hoursPerDay: 1, daysPerMonth: 30 },
   { name: 'TV 32"', quantity: 1, power: 180, hoursPerDay: 5, daysPerMonth: 30 },
   { name: 'TV 42"', quantity: 1, power: 280, hoursPerDay: 5, daysPerMonth: 30 },
-  { name: 'Ventilador', quantity: 1, power: 100, hoursPerDay: 8, daysPerMonth: 30 },
+  { name: 'Ventilador / Circulador de Ar (100W)', quantity: 1, power: 100, hoursPerDay: 8, daysPerMonth: 30 },
+  { name: 'Ventilador / Circulador de Ar (120W)', quantity: 1, power: 120, hoursPerDay: 8, daysPerMonth: 30 },
   { name: 'Videogame (Console)', quantity: 1, power: 200, hoursPerDay: 3, daysPerMonth: 30 },
 ];
