@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from 'react';
-import { Calculator, PieChart, Lightbulb, Zap, Settings, TrendingDown, Moon, Sun } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Calculator, PieChart, Lightbulb, Zap, Settings, TrendingDown, Moon, Sun, Download, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Appliance, BillConfig, TariffFlag } from './types';
 import { COMMON_APPLIANCES, TARIFF_FLAGS } from './constants';
@@ -14,12 +14,18 @@ import BillEstimate from './components/BillEstimate';
 import ConsumptionChart from './components/ConsumptionChart';
 import SavingsTips from './components/SavingsTips';
 import QuickEstimate from './components/QuickEstimate';
+import { ReportTemplate } from './components/ReportTemplate';
+import { generateSavingsTips } from './utils/tips';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 type Tab = 'simulador' | 'conta' | 'grafico' | 'dicas' | 'rapido';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('simulador');
   const [appliances, setAppliances] = useState<Appliance[]>([]);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const reportRef = useRef<HTMLDivElement>(null);
 
   const [billConfig, setBillConfig] = useState<BillConfig>({
     tariff: 0.84318,
@@ -30,6 +36,39 @@ export default function App() {
 
   const totalConsumption = calculateTotalConsumption(appliances);
   const bill = calculateBill(totalConsumption, billConfig);
+  const tips = generateSavingsTips(appliances);
+
+  const handleGeneratePDF = async () => {
+    if (!reportRef.current) return;
+    
+    try {
+      setIsGeneratingPDF(true);
+      
+      // Small delay to ensure the component is fully rendered
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      const canvas = await html2canvas(reportRef.current, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('relatorio-enercontrol.pdf');
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      alert('Ocorreu um erro ao gerar o PDF. Tente novamente.');
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
 
   const tabs = [
     { id: 'simulador', label: 'Aparelhos', icon: <Calculator className="w-5 h-5" /> },
@@ -40,7 +79,19 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans relative overflow-x-hidden">
+      {/* Hidden Report Template for PDF Generation */}
+      <div className="absolute top-0 left-[-9999px] pointer-events-none z-[-1]">
+        <ReportTemplate 
+          ref={reportRef}
+          appliances={appliances}
+          totalConsumption={totalConsumption}
+          bill={bill}
+          billConfig={billConfig}
+          tips={tips}
+        />
+      </div>
+
       <header className="bg-indigo-600 text-white shadow-md z-50 relative">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6">
           <div className="flex items-center justify-between">
@@ -49,6 +100,14 @@ export default function App() {
               <h1 className="text-lg sm:text-2xl font-bold tracking-tight">EnerControl 🔋</h1>
             </div>
             <div className="flex items-center gap-3">
+              <button 
+                onClick={handleGeneratePDF}
+                disabled={isGeneratingPDF}
+                className="flex items-center gap-2 bg-indigo-500 hover:bg-indigo-400 disabled:bg-indigo-400 disabled:cursor-not-allowed px-3 py-1.5 sm:px-4 sm:py-2 rounded-full transition-colors text-sm font-medium"
+              >
+                {isGeneratingPDF ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                <span className="hidden sm:inline">{isGeneratingPDF ? 'Gerando...' : 'Gerar PDF'}</span>
+              </button>
               <div className="lg:hidden flex items-center gap-2 bg-indigo-700 px-3 py-1.5 rounded-full">
                 <span className="text-xs font-bold">{formatCurrency(bill.total)}</span>
               </div>
