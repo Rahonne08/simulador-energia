@@ -34,7 +34,7 @@ export const ReportTemplate = React.forwardRef<HTMLDivElement, Props>(({ applian
     <div 
       ref={ref} 
       className="p-10 w-[800px] font-sans absolute top-0 -left-[9999px]"
-      style={{ minHeight: '1123px', backgroundColor: '#ffffff', color: '#0f172a' }} // A4 approx height
+      style={{ backgroundColor: '#ffffff', color: '#0f172a' }}
     >
       {/* Header */}
       <div className="pb-6 mb-8 flex justify-between items-end" style={{ borderBottom: '2px solid #4f46e5' }}>
@@ -94,49 +94,98 @@ export const ReportTemplate = React.forwardRef<HTMLDivElement, Props>(({ applian
         </div>
       )}
 
-      {/* Tabela de Aparelhos */}
+      {/* Relatório Individual por Equipamento */}
       <div className="mb-10">
-        <h2 className="text-lg font-bold mb-4 pb-2" style={{ color: '#1e293b', borderBottom: '1px solid #e2e8f0' }}>Detalhamento dos Aparelhos</h2>
-        <table className="w-full text-left border-collapse text-sm">
-          <thead>
-            <tr>
-              <th className="p-3 font-semibold rounded-tl-lg" style={{ backgroundColor: '#f1f5f9', color: '#475569' }}>Aparelho</th>
-              <th className="p-3 font-semibold" style={{ backgroundColor: '#f1f5f9', color: '#475569' }}>Qtd</th>
-              <th className="p-3 font-semibold" style={{ backgroundColor: '#f1f5f9', color: '#475569' }}>Potência</th>
-              <th className="p-3 font-semibold" style={{ backgroundColor: '#f1f5f9', color: '#475569' }}>Uso</th>
-              <th className="p-3 font-semibold text-right rounded-tr-lg" style={{ backgroundColor: '#f1f5f9', color: '#475569' }}>Consumo (kWh/mês)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedAppliances.map((app, idx) => (
-              <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                <td className="p-3 font-medium" style={{ color: '#1e293b' }}>{app.name}</td>
-                <td className="p-3" style={{ color: '#475569' }}>{app.quantity}</td>
-                <td className="p-3" style={{ color: '#475569' }}>{app.power} W</td>
-                <td className="p-3" style={{ color: '#475569' }}>{app.hoursPerDay}h/dia × {app.daysPerMonth}d</td>
-                <td className="p-3 text-right font-bold" style={{ color: '#4f46e5' }}>{calculateConsumption(app).toFixed(1)}</td>
-              </tr>
-            ))}
-            {appliances.length === 0 && (
-              <tr>
-                <td colSpan={5} className="p-4 text-center" style={{ color: '#64748b' }}>Nenhum aparelho adicionado.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+        <h2 className="text-lg font-bold mb-4 pb-2" style={{ color: '#1e293b', borderBottom: '1px solid #e2e8f0' }}>Relatório Individual por Equipamento</h2>
+        {appliances.length === 0 ? (
+          <p className="p-4 text-center" style={{ color: '#64748b' }}>Nenhum aparelho adicionado.</p>
+        ) : (
+          <div className="grid grid-cols-2 gap-4">
+            {sortedAppliances.map((app, idx) => {
+              const monthly = calculateConsumption(app);
+              const daily = (app.power * app.hoursPerDay * app.quantity) / 1000;
+              const annual = monthly * 12;
+              const percent = totalConsumption > 0 ? (monthly / totalConsumption) * 100 : 0;
+
+              return (
+                <div key={idx} className="p-4 rounded-lg border" style={{ backgroundColor: '#f8fafc', borderColor: '#e2e8f0' }}>
+                  <h3 className="font-bold text-base mb-3" style={{ color: '#1e293b' }}>{app.name}</h3>
+                  <div className="grid grid-cols-2 gap-y-3 gap-x-2 text-xs">
+                    <div>
+                      <p style={{ color: '#64748b' }}>Qtd / Potência:</p>
+                      <p className="font-semibold" style={{ color: '#334155' }}>{app.quantity}x • {app.power}W</p>
+                    </div>
+                    <div>
+                      <p style={{ color: '#64748b' }}>Uso:</p>
+                      <p className="font-semibold" style={{ color: '#334155' }}>{app.hoursPerDay}h/dia • {app.daysPerMonth}d</p>
+                    </div>
+                    <div>
+                      <p style={{ color: '#64748b' }}>Consumo Diário:</p>
+                      <p className="font-semibold" style={{ color: '#334155' }}>{daily.toFixed(2)} kWh</p>
+                    </div>
+                    <div>
+                      <p style={{ color: '#64748b' }}>Consumo Mensal:</p>
+                      <p className="font-bold" style={{ color: '#4f46e5' }}>{monthly.toFixed(1)} kWh</p>
+                    </div>
+                    <div>
+                      <p style={{ color: '#64748b' }}>Consumo Anual:</p>
+                      <p className="font-semibold" style={{ color: '#334155' }}>{annual.toFixed(0)} kWh</p>
+                    </div>
+                    <div>
+                      <p style={{ color: '#64748b' }}>Impacto Total:</p>
+                      <p className="font-bold" style={{ color: '#059669' }}>{percent.toFixed(1)}%</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Dicas */}
       {tips.length > 0 && (
-        <div>
+        <div className="mb-10">
           <h2 className="text-lg font-bold mb-4 pb-2" style={{ color: '#1e293b', borderBottom: '1px solid #e2e8f0' }}>Dicas de Economia Personalizadas</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4 mb-8">
             {tips.map((tip, idx) => (
               <div key={idx} className="p-4 rounded-lg border" style={{ backgroundColor: '#f8fafc', borderColor: '#e2e8f0' }}>
                 <h3 className="font-bold text-sm mb-1" style={{ color: '#1e293b' }}>{tip.title}</h3>
                 <p className="text-xs leading-relaxed" style={{ color: '#475569' }}>{tip.desc}</p>
               </div>
             ))}
+          </div>
+
+          {/* Simulação de Troca */}
+          <div className="p-6 rounded-xl" style={{ backgroundColor: '#0f172a', color: '#ffffff' }}>
+            <h3 className="text-xl font-bold mb-2" style={{ color: '#ffffff' }}>Simulação de Troca de Aparelhos</h3>
+            <p className="mb-6 text-sm" style={{ color: '#cbd5e1' }}>Veja o impacto financeiro de trocar aparelhos antigos por versões mais eficientes (Selo Procel A).</p>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-4 rounded-lg border flex items-center justify-between" style={{ backgroundColor: '#1e293b', borderColor: '#334155' }}>
+                <div>
+                  <p className="text-xs" style={{ color: '#94a3b8' }}>Chuveiro Elétrico</p>
+                  <p className="font-semibold" style={{ color: '#ffffff' }}>5500W</p>
+                </div>
+                <div style={{ color: '#64748b' }}>→</div>
+                <div className="text-right">
+                  <p className="text-xs" style={{ color: '#34d399' }}>Aquecedor Solar</p>
+                  <p className="font-semibold" style={{ color: '#6ee7b7' }}>-80% consumo</p>
+                </div>
+              </div>
+              
+              <div className="p-4 rounded-lg border flex items-center justify-between" style={{ backgroundColor: '#1e293b', borderColor: '#334155' }}>
+                <div>
+                  <p className="text-xs" style={{ color: '#94a3b8' }}>Lâmpada Comum</p>
+                  <p className="font-semibold" style={{ color: '#ffffff' }}>60W</p>
+                </div>
+                <div style={{ color: '#64748b' }}>→</div>
+                <div className="text-right">
+                  <p className="text-xs" style={{ color: '#34d399' }}>Lâmpada LED</p>
+                  <p className="font-semibold" style={{ color: '#6ee7b7' }}>9W (-85%)</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

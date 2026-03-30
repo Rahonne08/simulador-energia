@@ -224,5 +224,5 @@ export function generateSavingsTips(appliances: Appliance[]): Tip[] {
     }
   }
 
-  return uniqueTips.slice(0, 6);
+  return uniqueTips;
 }
