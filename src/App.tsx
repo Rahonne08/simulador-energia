@@ -15,11 +15,13 @@ import ConsumptionChart from './components/ConsumptionChart';
 import SavingsTips from './components/SavingsTips';
 import QuickEstimate from './components/QuickEstimate';
 import { ReportTemplate } from './components/ReportTemplate';
+import License from './components/License';
+import PrivacyPolicy from './components/PrivacyPolicy';
 import { generateSavingsTips } from './utils/tips';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
-type Tab = 'simulador' | 'conta' | 'grafico' | 'dicas' | 'rapido';
+type Tab = 'simulador' | 'conta' | 'grafico' | 'dicas' | 'rapido' | 'licenca' | 'privacidade';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('simulador');
@@ -108,10 +110,13 @@ export default function App() {
       <header className="bg-indigo-600 text-white shadow-md z-50 relative">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 sm:gap-3">
+            <button 
+              onClick={() => setActiveTab('simulador')}
+              className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity focus:outline-none text-left"
+            >
               <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-300" />
               <h1 className="text-lg sm:text-2xl font-bold tracking-tight">EnerControl 🔋</h1>
-            </div>
+            </button>
             <div className="flex items-center gap-3">
               <button 
                 onClick={handleGeneratePDF}
@@ -228,6 +233,12 @@ export default function App() {
                   {activeTab === 'rapido' && (
                     <QuickEstimate />
                   )}
+                  {activeTab === 'licenca' && (
+                    <License />
+                  )}
+                  {activeTab === 'privacidade' && (
+                    <PrivacyPolicy />
+                  )}
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -236,8 +247,24 @@ export default function App() {
         </div>
       </main>
 
-      <footer className="max-w-7xl mx-auto px-4 py-8 text-center text-sm font-medium text-slate-500 uppercase tracking-wider">
-        Desenvolvido por <a href="https://github.com/Rahonne08" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-600 transition-colors underline-offset-4 hover:underline">Pablo Rahonne</a>
+      <footer className="max-w-7xl mx-auto px-4 py-8 text-center text-sm font-medium text-slate-500">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-4">
+          <button 
+            onClick={() => setActiveTab('privacidade')}
+            className="hover:text-indigo-600 transition-colors underline-offset-4 hover:underline"
+          >
+            Política de Privacidade
+          </button>
+          <button 
+            onClick={() => setActiveTab('licenca')}
+            className="hover:text-indigo-600 transition-colors underline-offset-4 hover:underline"
+          >
+            Termos de Uso (EULA)
+          </button>
+        </div>
+        <div className="uppercase tracking-wider">
+          Desenvolvido por <a href="https://github.com/Rahonne08" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-600 transition-colors underline-offset-4 hover:underline">Pablo Rahonne</a>
+        </div>
       </footer>
     </div>
   );
