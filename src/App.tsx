@@ -17,6 +17,7 @@ import QuickEstimate from './components/QuickEstimate';
 import { ReportTemplate } from './components/ReportTemplate';
 import License from './components/License';
 import PrivacyPolicy from './components/PrivacyPolicy';
+import MaintenancePage from './components/MaintenancePage';
 import { generateSavingsTips } from './utils/tips';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -24,6 +25,7 @@ import jsPDF from 'jspdf';
 type Tab = 'simulador' | 'conta' | 'grafico' | 'dicas' | 'rapido' | 'licenca' | 'privacidade';
 
 export default function App() {
+  const [maintenanceMode, setMaintenanceMode] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('simulador');
   const [appliances, setAppliances] = useState<Appliance[]>([]);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
@@ -92,6 +94,10 @@ export default function App() {
     { id: 'dicas', label: 'Dicas', icon: <Lightbulb className="w-5 h-5" /> },
     { id: 'rapido', label: 'Estimativa Rápida', icon: <TrendingDown className="w-5 h-5" /> },
   ];
+
+  if (maintenanceMode) {
+    return <MaintenancePage onDisable={() => setMaintenanceMode(false)} />;
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans relative overflow-x-hidden">
@@ -260,6 +266,13 @@ export default function App() {
             className="hover:text-indigo-600 transition-colors underline-offset-4 hover:underline"
           >
             Termos de Uso (EULA)
+          </button>
+          <button 
+            onClick={() => setMaintenanceMode(true)}
+            className="hover:text-amber-500 text-slate-400 font-medium transition-colors underline-offset-4 hover:underline flex items-center gap-1"
+            title="Ver página de manutenção temporária"
+          >
+            🚧 Simular Fora do Ar
           </button>
         </div>
         <div className="uppercase tracking-wider">
