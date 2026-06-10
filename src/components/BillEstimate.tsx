@@ -80,7 +80,7 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                     whileTap={{ scale: 0.95 }}
                     className={`flex items-center justify-center p-3 rounded-xl border cursor-pointer transition-all text-sm ${
                       billConfig.connectionType === type 
-                        ? 'border-indigo-500 bg-indigo-50 text-indigo-700 font-medium ring-1 ring-indigo-500' 
+                        ? 'border-br-blue bg-br-blue/10 text-br-blue font-bold ring-1 ring-br-blue shadow-sm' 
                         : 'border-slate-200 text-slate-600 hover:bg-slate-50'
                     }`}
                   >
@@ -111,7 +111,7 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                     step="0.01"
                     value={billConfig.tariff}
                     onChange={e => setBillConfig({ ...billConfig, tariff: Number(e.target.value) })}
-                    className="w-full rounded-xl border-slate-300 border py-3 pl-10 pr-4 text-slate-800 bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition-shadow text-lg font-semibold"
+                    className="w-full rounded-xl border-slate-300 border py-3 pl-10 pr-4 text-slate-800 bg-white focus:ring-2 focus:ring-br-blue outline-none transition-shadow text-lg font-semibold"
                   />
                 </div>
                 <p className="text-xs text-slate-500 mt-2">Valor cobrado pela distribuidora por cada kWh consumido.</p>
@@ -152,7 +152,7 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                             setBillConfig({ ...billConfig, flag: key as TariffFlag });
                           }
                         }}
-                        className="w-5 h-5 text-indigo-600 focus:ring-indigo-500 border-slate-300"
+                        className="w-5 h-5 text-br-blue focus:ring-br-blue border-slate-300"
                       />
                       <span className={`font-medium ${billConfig.flag === key ? flag.color : 'text-slate-700'}`}>
                         {flag.label}
@@ -176,65 +176,65 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
           animate={{ opacity: 1, x: 0 }}
           className="flex flex-col justify-start"
         >
-          <div className="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+          <div className="bg-gradient-to-br from-br-blue to-[#001c54] rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden border-2 border-br-yellow/20">
             {/* Decorative background elements */}
-            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full blur-2xl"></div>
-            <div className="absolute bottom-0 left-0 -mb-4 -ml-4 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl"></div>
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-br-green opacity-20 rounded-full blur-2xl"></div>
+            <div className="absolute bottom-0 left-0 -mb-4 -ml-4 w-40 h-40 bg-br-yellow opacity-10 rounded-full blur-2xl"></div>
             
-            <h3 className="text-indigo-100 font-medium mb-1 relative z-10">Valor Estimado da Conta</h3>
-            <div className="text-4xl sm:text-5xl font-bold tracking-tight mb-8 relative z-10">
+            <h3 className="text-br-yellow/80 font-bold mb-1 relative z-10 text-sm uppercase tracking-wide">Valor Estimado da Conta</h3>
+            <div className="text-4xl sm:text-5xl font-black tracking-tight mb-8 relative z-10 text-white drop-shadow-md">
               {formatCurrency(bill.total)}
             </div>
 
-            <div className="space-y-4 relative z-10">
-              <div className="flex justify-between items-center pb-4 border-b border-indigo-500/30">
-                <span className="text-indigo-100">Consumo Faturado</span>
-                <span className="font-semibold text-lg flex items-center gap-1">
-                  <Zap className="w-4 h-4 text-yellow-300" />
+            <div className="space-y-4 relative z-10 font-medium">
+              <div className="flex justify-between items-center pb-4 border-b border-white/10">
+                <span className="text-slate-300">Consumo Faturado</span>
+                <span className="font-bold text-lg flex items-center gap-1 text-white">
+                  <Zap className="w-4 h-4 text-br-yellow" />
                   {formatNumber(bill.billedConsumption, 1)} kWh
                 </span>
               </div>
               
               {bill.billedConsumption > totalConsumption && (
-                <div className="flex flex-col sm:flex-row justify-between sm:items-center text-xs text-indigo-200 mt-1 mb-2 gap-1">
+                <div className="flex flex-col sm:flex-row justify-between sm:items-center text-xs text-slate-400 mt-1 mb-2 gap-1">
                   <span>Consumo Medido: {formatNumber(totalConsumption, 1)} kWh</span>
                   <span>(Custo de Disponibilidade)</span>
                 </div>
               )}
               
               {billConfig.isLowIncome && (
-                <div className="flex justify-between items-center text-sm text-emerald-300">
+                <div className="flex justify-between items-center text-sm text-br-green">
                   <span>Desconto Tarifa Social</span>
-                  <span className="font-medium">- {formatCurrency(bill.discount)}</span>
+                  <span className="font-bold">- {formatCurrency(bill.discount)}</span>
                 </div>
               )}
 
               <div className="flex justify-between items-center text-sm">
-                <span className="text-indigo-200">
+                <span className="text-slate-300">
                   Custo Base
                 </span>
-                <span className="font-medium">{formatCurrency(bill.base)}</span>
+                <span className="font-semibold text-white">{formatCurrency(bill.base)}</span>
               </div>
               
               <div className="flex justify-between items-center text-sm">
-                <span className="text-indigo-200 flex items-center gap-1.5">
+                <span className="text-slate-300 flex items-center gap-1.5">
                   Acréscimo Bandeira
-                  {bill.extra > 0 && <AlertTriangle className="w-3 h-3 text-yellow-300" />}
+                  {bill.extra > 0 && <AlertTriangle className="w-3 h-3 text-br-yellow" />}
                 </span>
-                <span className={`font-medium ${bill.extra > 0 ? 'text-yellow-300' : 'text-emerald-300'}`}>
+                <span className={`font-bold ${bill.extra > 0 ? 'text-br-yellow' : 'text-br-green'}`}>
                   {bill.extra > 0 ? '+' : ''}{formatCurrency(bill.extra)}
                 </span>
               </div>
 
-              <div className="pt-3 mt-3 border-t border-indigo-500/30 space-y-2">
-                <p className="text-xs text-indigo-300 font-medium uppercase tracking-wider mb-2">Tributos</p>
+              <div className="pt-3 mt-3 border-t border-white/10 space-y-2">
+                <p className="text-xs text-white/50 font-bold uppercase tracking-wider mb-2">Tributos</p>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-indigo-200">ICMS (23%)</span>
-                  <span className="font-medium text-red-300">+{formatCurrency(bill.icms)}</span>
+                  <span className="text-slate-300">ICMS (23%)</span>
+                  <span className="font-semibold text-rose-300">+{formatCurrency(bill.icms)}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-indigo-200">PIS/COFINS</span>
-                  <span className="font-medium text-red-300">+{formatCurrency(bill.pis + bill.cofins)}</span>
+                  <span className="text-slate-300">PIS/COFINS</span>
+                  <span className="font-semibold text-rose-300">+{formatCurrency(bill.pis + bill.cofins)}</span>
                 </div>
               </div>
             </div>

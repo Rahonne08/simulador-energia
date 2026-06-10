@@ -10,7 +10,7 @@ interface Props {
   totalConsumption: number;
 }
 
-const COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316'];
+const COLORS = ['#009C3B', '#FFDF00', '#002776', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
 export default function ConsumptionChart({ appliances, totalConsumption }: Props) {
   const [selectedApplianceName, setSelectedApplianceName] = useState<string | null>(null);
@@ -48,11 +48,11 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
           <div className="flex items-center justify-between gap-4 pt-2 border-t border-slate-100">
             <div>
               <p className="text-[10px] text-slate-400 uppercase font-bold">Consumo</p>
-              <p className="text-indigo-600 font-black">{data.value.toFixed(1)} <span className="text-xs font-normal">kWh</span></p>
+              <p className="text-br-blue font-black">{data.value.toFixed(1)} <span className="text-xs font-normal">kWh</span></p>
             </div>
             <div className="text-right">
               <p className="text-[10px] text-slate-400 uppercase font-bold">Impacto</p>
-              <p className="text-emerald-600 font-black">{percent}%</p>
+              <p className="text-br-green font-black">{percent}%</p>
             </div>
           </div>
         </div>
@@ -71,8 +71,8 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
     <div className="p-4 sm:p-8">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200 shrink-0">
-            <BarChart3 className="w-6 h-6 text-white" />
+          <div className="w-12 h-12 bg-br-blue rounded-2xl flex items-center justify-center shadow-lg shadow-br-blue/20 shrink-0">
+            <BarChart3 className="w-6 h-6 text-br-yellow" />
           </div>
           <div>
             <h2 className="text-2xl font-black text-slate-900 tracking-tight">Análise de Consumo</h2>
@@ -85,7 +85,7 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setSelectedApplianceName(null)}
-                  className="px-2 py-0.5 bg-indigo-100 text-indigo-600 text-[10px] font-black uppercase tracking-wider rounded-md hover:bg-indigo-200 transition-colors"
+                  className="px-2 py-0.5 bg-br-blue/10 text-br-blue text-[10px] font-black uppercase tracking-wider rounded-md hover:bg-br-blue/20 transition-colors"
                 >
                   Limpar Filtro
                 </motion.button>
@@ -96,27 +96,27 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
         
         <div className="flex items-center gap-3 self-end lg:self-auto">
           <div className="hidden xl:flex items-center gap-2 text-xs font-bold text-slate-400 bg-slate-50 px-4 py-2 rounded-xl border border-slate-200">
-            <Info className="w-4 h-4 text-indigo-500" />
+            <Info className="w-4 h-4 text-br-blue" />
             <span>INTERAÇÃO ATIVA</span>
           </div>
           <div className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shadow-inner">
             <button 
               onClick={() => setChartType('pie')} 
-              className={`p-2 rounded-xl transition-all ${chartType === 'pie' ? 'bg-white shadow-md text-indigo-600' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`p-2 rounded-xl transition-all ${chartType === 'pie' ? 'bg-white shadow-md text-br-blue' : 'text-slate-400 hover:text-slate-600'}`}
               title="Gráfico de Pizza"
             >
               <PieChartIcon className="w-5 h-5" />
             </button>
             <button 
               onClick={() => setChartType('bar')} 
-              className={`p-2 rounded-xl transition-all ${chartType === 'bar' ? 'bg-white shadow-md text-indigo-600' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`p-2 rounded-xl transition-all ${chartType === 'bar' ? 'bg-white shadow-md text-br-blue' : 'text-slate-400 hover:text-slate-600'}`}
               title="Gráfico de Barras"
             >
               <BarChart3 className="w-5 h-5" />
             </button>
             <button 
               onClick={() => setChartType('line')} 
-              className={`p-2 rounded-xl transition-all ${chartType === 'line' ? 'bg-white shadow-md text-indigo-600' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`p-2 rounded-xl transition-all ${chartType === 'line' ? 'bg-white shadow-md text-br-blue' : 'text-slate-400 hover:text-slate-600'}`}
               title="Gráfico de Linha"
             >
               <LineChartIcon className="w-5 h-5" />
@@ -212,7 +212,7 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
                     {data.map((entry, index) => (
                       <Cell 
                         key={`cell-${index}`} 
-                        fill={index === 0 ? '#4f46e5' : COLORS[index % COLORS.length]} 
+                        fill={index === 0 ? '#009C3B' : COLORS[index % COLORS.length]} 
                         fillOpacity={index === 0 ? 1 : 0.8}
                         className="cursor-pointer hover:fill-opacity-100 transition-all outline-none"
                       />
@@ -240,10 +240,10 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
                   <Line 
                     type="monotone" 
                     dataKey="value" 
-                    stroke="#4f46e5" 
+                    stroke="#009C3B" 
                     strokeWidth={4} 
-                    dot={{ r: 6, fill: '#4f46e5', strokeWidth: 3, stroke: '#fff' }} 
-                    activeDot={{ r: 10, fill: '#4f46e5', stroke: '#fff', strokeWidth: 4 }} 
+                    dot={{ r: 6, fill: '#009C3B', strokeWidth: 3, stroke: '#fff' }} 
+                    activeDot={{ r: 10, fill: '#009C3B', stroke: '#fff', strokeWidth: 4 }} 
                     animationDuration={1500}
                   />
                 </LineChart>
@@ -258,23 +258,23 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-indigo-600 rounded-3xl p-6 text-white shadow-xl shadow-indigo-200 relative overflow-hidden"
+            className="bg-gradient-to-br from-br-green to-[#007A2E] rounded-3xl p-6 text-white shadow-xl shadow-br-green/20 relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 p-4 opacity-10">
-              <Zap className="w-24 h-24" />
+              <Zap className="w-24 h-24 text-br-yellow" />
             </div>
-            <p className="text-xs font-bold text-indigo-200 uppercase tracking-widest mb-2">Maior Consumidor</p>
-            <h3 className="text-2xl font-black mb-4 truncate pr-12">{topAppliance.name}</h3>
+            <p className="text-xs font-bold text-white/80 uppercase tracking-widest mb-2">Maior Consumidor</p>
+            <h3 className="text-2xl font-black mb-4 truncate pr-12 drop-shadow-sm">{topAppliance.name}</h3>
             <div className="flex items-end justify-between">
               <div>
-                <p className="text-4xl font-black">{((topAppliance.value / totalConsumption) * 100).toFixed(1)}%</p>
-                <p className="text-xs text-indigo-100 font-medium">do consumo total da casa</p>
+                <p className="text-4xl font-black drop-shadow-sm">{((topAppliance.value / totalConsumption) * 100).toFixed(1)}%</p>
+                <p className="text-xs text-br-yellow font-medium">do consumo total da casa</p>
               </div>
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setSelectedApplianceName(topAppliance.name)}
-                className="px-4 py-2 bg-white text-indigo-600 text-xs font-black rounded-xl shadow-lg"
+                className="px-4 py-2 bg-br-yellow text-br-blue text-xs font-black rounded-xl shadow-lg border border-[#FFE533]"
               >
                 VER DETALHES
               </motion.button>
@@ -302,14 +302,14 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
                     onClick={() => setSelectedApplianceName(isSelected ? null : item.name)}
                     className={`flex items-center justify-between w-full p-4 rounded-2xl border transition-all text-left group ${
                       isSelected 
-                        ? 'bg-indigo-600 border-indigo-600 text-white shadow-xl shadow-indigo-100' 
-                        : 'bg-white border-slate-100 hover:border-indigo-200 hover:shadow-md text-slate-700'
+                        ? 'bg-br-blue border-br-blue text-white shadow-xl shadow-br-blue/20' 
+                        : 'bg-white border-slate-100 hover:border-br-blue/30 hover:shadow-md text-slate-700'
                     }`}
                   >
                     <div className="flex items-center gap-3 min-w-0 flex-1">
                       <div 
                         className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-xs shrink-0 ${
-                          isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-400'
+                          isSelected ? 'bg-br-yellow text-br-blue' : 'bg-slate-100 text-slate-400'
                         }`}
                       >
                         0{index + 1}
@@ -319,8 +319,8 @@ export default function ConsumptionChart({ appliances, totalConsumption }: Props
                           {item.name}
                         </span>
                         <div className="flex items-center gap-2">
-                          <div className={`w-2 h-2 rounded-full ${isSelected ? 'bg-indigo-200' : ''}`} style={isSelected ? {} : { backgroundColor: COLORS[index % COLORS.length] }} />
-                          <span className={`text-[10px] font-bold uppercase tracking-wider ${isSelected ? 'text-indigo-100' : 'text-slate-400'}`}>
+                          <div className={`w-2 h-2 rounded-full ${isSelected ? 'bg-br-green' : ''}`} style={isSelected ? {} : { backgroundColor: COLORS[index % COLORS.length] }} />
+                          <span className={`text-[10px] font-bold uppercase tracking-wider ${isSelected ? 'text-br-yellow' : 'text-slate-400'}`}>
                             {item.value.toFixed(1)} kWh
                           </span>
                         </div>

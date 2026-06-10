@@ -14,7 +14,7 @@ interface CounterProps {
 const Counter = ({ icon, label, value, onChange, min = 0 }: CounterProps) => (
   <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200">
     <div className="flex items-center gap-3">
-      <div className="p-2 bg-white rounded-lg shadow-sm text-indigo-600 shrink-0">
+      <div className="p-2 bg-white rounded-lg shadow-sm text-br-blue shrink-0">
         {icon}
       </div>
       <span className="font-medium text-slate-700 text-sm sm:text-base">{label}</span>
@@ -87,24 +87,24 @@ export const QuickEstimate = () => {
         <Counter icon={<Waves className="w-5 h-5" />} label="Máquinas de Lavar" value={washingMachines} onChange={setWashingMachines} min={0} />
       </div>
 
-      <div className="bg-indigo-600 rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden shadow-lg shadow-indigo-200">
-        <div className="absolute top-0 right-0 p-4 opacity-10">
-          <Zap className="w-32 h-32" />
+      <div className="bg-gradient-to-br from-br-green to-[#007A2E] rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-xl shadow-br-green/20 border-2 border-br-yellow/30">
+        <div className="absolute top-0 right-0 p-4 opacity-20">
+          <Zap className="w-32 h-32 text-br-yellow" />
         </div>
         
         <div className="relative z-10">
-          <p className="text-indigo-200 text-sm font-medium mb-1">Consumo Estimado</p>
+          <p className="text-white/80 text-sm font-bold uppercase tracking-wider mb-1">Consumo Estimado</p>
           <div className="flex items-baseline gap-2 mb-6">
-            <span className="text-4xl sm:text-5xl font-bold">{formatNumber(kwh, 0)}</span>
-            <span className="text-indigo-200 font-medium">kWh/mês</span>
+            <span className="text-4xl sm:text-5xl font-black drop-shadow-sm">{formatNumber(kwh, 0)}</span>
+            <span className="text-br-yellow font-bold">kWh/mês</span>
           </div>
 
-          <div className="pt-6 border-t border-indigo-500/50">
-            <p className="text-indigo-200 text-sm font-medium mb-1">Valor Aproximado</p>
-            <span className="text-3xl sm:text-4xl font-bold">{formatCurrency(bill.total)}</span>
+          <div className="pt-6 border-t border-white/20">
+            <p className="text-white/80 text-sm font-bold uppercase tracking-wider mb-1">Valor Aproximado</p>
+            <span className="text-3xl sm:text-4xl font-black text-br-yellow drop-shadow-md">{formatCurrency(bill.total)}</span>
           </div>
           
-          <p className="text-xs text-indigo-300 mt-8 leading-relaxed">
+          <p className="text-xs text-white/60 mt-8 leading-relaxed italic font-medium">
             * Cálculo baseado na tarifa média de R$ 0,84318/kWh. Para um valor exato e detalhado, utilize o Simulador Completo na aba "Aparelhos".
           </p>
         </div>

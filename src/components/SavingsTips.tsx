@@ -80,10 +80,14 @@ export default function SavingsTips({ appliances }: Props) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="mt-10 bg-slate-900 rounded-2xl p-8 text-white relative overflow-hidden border border-transparent"
+        className="mt-10 bg-gradient-to-br from-br-blue to-[#001c54] rounded-2xl p-8 text-white relative overflow-hidden shadow-xl"
       >
-        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-indigo-500 opacity-20 rounded-full blur-3xl"></div>
-        <h3 className="text-xl font-bold mb-4 relative z-10">Simulação de Troca de Aparelhos</h3>
+        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-br-green opacity-30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-br-green via-br-yellow to-br-blue"></div>
+        <h3 className="text-xl font-bold mb-4 relative z-10 text-br-yellow flex items-center gap-2">
+          <Lightbulb className="w-5 h-5" />
+          Simulação de Troca de Aparelhos
+        </h3>
         <p className="text-slate-300 mb-6 max-w-2xl relative z-10">
           Veja o impacto financeiro de trocar aparelhos antigos por versões mais eficientes (Selo Procel A).
         </p>
@@ -91,31 +95,31 @@ export default function SavingsTips({ appliances }: Props) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
           <motion.div 
             whileHover={{ scale: 1.02 }}
-            className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 flex items-center justify-between"
+            className="bg-white/5 p-4 rounded-xl border border-white/10 flex items-center justify-between backdrop-blur-sm"
           >
             <div>
-              <p className="text-sm text-slate-400">Chuveiro Elétrico</p>
-              <p className="font-semibold">5500W</p>
+              <p className="text-sm text-slate-300">Chuveiro Elétrico</p>
+              <p className="font-semibold text-white">5500W</p>
             </div>
-            <ArrowRight className="w-5 h-5 text-slate-500 mx-2" />
+            <ArrowRight className="w-5 h-5 text-white/40 mx-2" />
             <div className="text-right">
-              <p className="text-sm text-emerald-400">Aquecedor Solar</p>
-              <p className="font-semibold text-emerald-300">-80% consumo</p>
+              <p className="text-sm font-bold text-br-green">Aquecedor Solar</p>
+              <p className="font-semibold text-br-yellow">-80% consumo</p>
             </div>
           </motion.div>
           
           <motion.div 
             whileHover={{ scale: 1.02 }}
-            className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 flex items-center justify-between"
+            className="bg-white/5 p-4 rounded-xl border border-white/10 flex items-center justify-between backdrop-blur-sm"
           >
             <div>
-              <p className="text-sm text-slate-400">Lâmpada Comum</p>
-              <p className="font-semibold">60W</p>
+              <p className="text-sm text-slate-300">Lâmpada Comum</p>
+              <p className="font-semibold text-white">60W</p>
             </div>
-            <ArrowRight className="w-5 h-5 text-slate-500 mx-2" />
+            <ArrowRight className="w-5 h-5 text-white/40 mx-2" />
             <div className="text-right">
-              <p className="text-sm text-emerald-400">Lâmpada LED</p>
-              <p className="font-semibold text-emerald-300">9W (-85%)</p>
+              <p className="text-sm font-bold text-br-green">Lâmpada LED</p>
+              <p className="font-semibold text-br-yellow">9W (-85%)</p>
             </div>
           </motion.div>
         </div>

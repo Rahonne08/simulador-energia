@@ -70,7 +70,7 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <h2 className="text-xl font-bold text-slate-800">Seus Aparelhos</h2>
-          <span className="bg-indigo-100 text-indigo-700 py-1 px-3 rounded-full text-sm font-medium">
+          <span className="bg-br-yellow/20 text-br-blue py-1 px-3 rounded-full text-sm font-bold border border-br-yellow/50 shadow-sm">
             {appliances.length} aparelhos
           </span>
         </div>
@@ -101,7 +101,7 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
         <div className="mb-4">
           <label className="block text-sm font-medium text-slate-700 mb-1">Aparelhos Comuns</label>
           <select 
-            className="w-full rounded-lg border-slate-300 bg-white text-slate-900 border p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+            className="w-full rounded-lg border-slate-300 bg-white text-slate-900 border p-2.5 text-sm focus:ring-2 focus:ring-br-green focus:border-br-green outline-none"
             onChange={handleAddCommon}
             defaultValue=""
           >
@@ -176,7 +176,7 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
           whileTap={{ scale: 0.95 }}
           onClick={handleAdd}
           disabled={!newAppliance.name || !newAppliance.power || !newAppliance.hoursPerDay}
-          className="w-full md:w-auto flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
+          className="w-full md:w-auto flex items-center justify-center gap-2 bg-br-blue hover:bg-[#001c54] disabled:bg-br-blue/50 text-white px-6 py-2.5 rounded-lg font-bold transition-all shadow-md hover:shadow-lg"
         >
           <Plus className="w-4 h-4" />
           Adicionar Aparelho
@@ -233,10 +233,10 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                           <div className="flex items-center gap-2">
                             {app.name}
                             <div className="relative group/tooltip">
-                              <Info className="w-3.5 h-3.5 text-slate-300 group-hover/tooltip:text-indigo-500 cursor-help transition-colors" />
-                              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tooltip:block z-50 w-48 p-3 bg-slate-900 text-white text-[10px] rounded-xl shadow-xl pointer-events-none">
+                              <Info className="w-3.5 h-3.5 text-slate-300 group-hover/tooltip:text-br-blue cursor-help transition-colors" />
+                              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tooltip:block z-50 w-48 p-3 bg-br-blue text-white text-[10px] rounded-xl shadow-xl pointer-events-none ring-1 ring-white/20">
                                 <div className="space-y-1.5">
-                                  <p className="font-bold border-b border-slate-700 pb-1 mb-1 text-indigo-400 uppercase tracking-wider">Impacto no Consumo</p>
+                                  <p className="font-bold border-b border-white/20 pb-1 mb-1 text-br-yellow uppercase tracking-wider">Impacto no Consumo</p>
                                   <div className="flex justify-between">
                                     <span className="text-slate-400">Diário:</span>
                                     <span className="font-bold">{dailyConsumption.toFixed(2)} kWh</span>
@@ -249,12 +249,12 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                                     <span className="text-slate-400">Anual:</span>
                                     <span className="font-bold">{annualConsumption.toFixed(1)} kWh</span>
                                   </div>
-                                  <div className="flex justify-between pt-1 border-t border-slate-700">
-                                    <span className="text-slate-400">Percentual:</span>
-                                    <span className="font-bold text-emerald-400">{percent.toFixed(1)}%</span>
+                                  <div className="flex justify-between pt-1 border-t border-white/20">
+                                    <span className="text-white/80">Percentual:</span>
+                                    <span className="font-bold text-br-yellow">{percent.toFixed(1)}%</span>
                                   </div>
                                 </div>
-                                <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></div>
+                                <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-br-blue"></div>
                               </div>
                             </div>
                           </div>
@@ -266,8 +266,8 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                           {dailyConsumption.toFixed(2)} kWh
                         </td>
                         <td className="py-4">
-                          <div className="flex items-center gap-1.5 text-indigo-700 font-semibold">
-                            <Zap className="w-4 h-4" />
+                          <div className="flex items-center gap-1.5 text-br-blue font-bold">
+                            <Zap className="w-4 h-4 text-br-yellow" />
                             {monthlyConsumption.toFixed(1)} kWh
                           </div>
                         </td>
@@ -336,10 +336,10 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                     <div className="flex items-center gap-2 mb-3 pr-8">
                       <h4 className="font-bold text-slate-800">{app.name}</h4>
                       <div className="relative group/tooltip">
-                        <Info className="w-3.5 h-3.5 text-slate-300 group-hover/tooltip:text-indigo-500 cursor-help transition-colors" />
-                        <div className="absolute bottom-full left-0 mb-2 hidden group-hover/tooltip:block z-50 w-48 p-3 bg-slate-900 text-white text-[10px] rounded-xl shadow-xl pointer-events-none">
+                        <Info className="w-3.5 h-3.5 text-slate-300 group-hover/tooltip:text-br-blue cursor-help transition-colors" />
+                        <div className="absolute bottom-full left-0 mb-2 hidden group-hover/tooltip:block z-50 w-48 p-3 bg-br-blue text-white text-[10px] rounded-xl shadow-xl pointer-events-none ring-1 ring-white/20">
                           <div className="space-y-1.5">
-                            <p className="font-bold border-b border-slate-700 pb-1 mb-1 text-indigo-400 uppercase tracking-wider">Impacto no Consumo</p>
+                            <p className="font-bold border-b border-white/20 pb-1 mb-1 text-br-yellow uppercase tracking-wider">Impacto no Consumo</p>
                             <div className="flex justify-between">
                               <span className="text-slate-400">Diário:</span>
                               <span className="font-bold">{dailyConsumption.toFixed(2)} kWh</span>
@@ -352,12 +352,12 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                               <span className="text-slate-400">Anual:</span>
                               <span className="font-bold">{annualConsumption.toFixed(1)} kWh</span>
                             </div>
-                            <div className="flex justify-between pt-1 border-t border-slate-700">
-                              <span className="text-slate-400">Percentual:</span>
-                              <span className="font-bold text-emerald-400">{percent.toFixed(1)}%</span>
+                            <div className="flex justify-between pt-1 border-t border-white/20">
+                              <span className="text-white/80">Percentual:</span>
+                              <span className="font-bold text-br-yellow">{percent.toFixed(1)}%</span>
                             </div>
                           </div>
-                          <div className="absolute top-full left-2 border-4 border-transparent border-t-slate-900"></div>
+                          <div className="absolute top-full left-2 border-4 border-transparent border-t-br-blue"></div>
                         </div>
                       </div>
                     </div>
@@ -376,9 +376,9 @@ export default function ApplianceList({ appliances, setAppliances }: Props) {
                         <p className="text-slate-700 font-medium">{dailyConsumption.toFixed(2)} kWh</p>
                       </div>
                       <div>
-                        <p className="text-indigo-600 text-xs uppercase font-bold tracking-wider mb-0.5">Consumo Mensal</p>
-                        <p className="text-indigo-700 font-bold flex items-center gap-1">
-                          <Zap className="w-3 h-3" />
+                        <p className="text-br-blue text-xs uppercase font-bold tracking-wider mb-0.5">Consumo Mensal</p>
+                        <p className="text-br-green font-black flex items-center gap-1 text-lg">
+                          <Zap className="w-4 h-4 text-br-yellow" />
                           {monthlyConsumption.toFixed(1)} kWh
                         </p>
                       </div>
