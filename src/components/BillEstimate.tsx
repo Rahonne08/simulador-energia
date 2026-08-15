@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Appliance, BillConfig, TariffFlag } from '../types';
 import { TARIFF_FLAGS } from '../constants';
 import { formatCurrency, formatNumber } from '../utils';
-import { Settings, Zap, AlertTriangle } from 'lucide-react';
+import { Settings, Zap, AlertTriangle, ShieldCheck, DollarSign, Activity } from 'lucide-react';
 
 interface Props {
   appliances: Appliance[];
@@ -24,21 +24,23 @@ interface Props {
 }
 
 export default function BillEstimate({ appliances, billConfig, setBillConfig, totalConsumption, bill }: Props) {
-  const getFlagColorName = (colorClass: string) => {
-    if (!colorClass) return 'slate';
-    if (colorClass.includes('green')) return 'green';
-    if (colorClass.includes('yellow')) return 'yellow';
-    if (colorClass.includes('red')) return 'red';
-    return 'slate';
-  };
-
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-8">
-        <h2 className="text-xl font-bold text-slate-800">Estimativa da Conta</h2>
-        <div className="flex items-center gap-2 text-sm text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
-          <Settings className="w-4 h-4" />
-          Configuração Tarifária
+    <div className="p-6 sm:p-8 text-slate-100">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-800">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 bg-cyan-950/60 rounded-xl border border-cyan-500/30 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.2)]">
+            <DollarSign className="w-6 h-6" />
+          </div>
+          <div>
+            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+              Cálculo Tarifário & Projeção Financeira
+            </h2>
+            <p className="text-xs font-mono text-slate-400">Simulação de faturamento e composição de impostos regulatórios</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 bg-cyan-950/40 px-3.5 py-1.5 rounded-full border border-cyan-500/30">
+          <Settings className="w-3.5 h-3.5" />
+          <span>CONFIGURAÇÃO DE REDE</span>
         </div>
       </div>
 
@@ -47,15 +49,24 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-200"
+          className="bg-[#0b111e]/90 p-6 rounded-3xl border border-cyan-500/20 shadow-xl"
         >
-          <h3 className="text-sm font-semibold text-slate-600 mb-5 uppercase tracking-wider">Tarifa e Bandeira</h3>
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+            <h3 className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-widest flex items-center gap-2">
+              <Activity className="w-4 h-4 text-cyan-400" />
+              Parâmetros de Fornecimento
+            </h3>
+            <span className="text-[10px] font-mono text-slate-500 uppercase">Tarifa & Carga</span>
+          </div>
           
           <div className="space-y-6">
-            <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200">
+            <div className="flex items-center justify-between p-4 bg-[#070b13] rounded-2xl border border-slate-800">
               <div className="pr-4">
-                <h4 className="font-medium text-slate-800">Cliente Baixa Renda</h4>
-                <p className="text-xs text-slate-500 mt-1">Tarifa Social (até 80 kWh grátis)</p>
+                <h4 className="font-bold text-white text-sm flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  Tarifa Social de Energia (TSEE)
+                </h4>
+                <p className="text-xs font-mono text-slate-400 mt-1">Isenção de 100% até 80 kWh mensais</p>
               </div>
               <label className="relative inline-flex items-center cursor-pointer shrink-0">
                 <input 
@@ -65,23 +76,23 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                   onChange={(e) => setBillConfig({ ...billConfig, isLowIncome: e.target.checked })}
                   aria-label="Ativar Tarifa Social para Cliente Baixa Renda"
                 />
-                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500 shadow-inner"></div>
               </label>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Tipo de Conexão
+              <label className="block text-xs font-mono text-slate-300 mb-2 uppercase">
+                Padrão de Entrada (Conexão)
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {(['monofasico', 'bifasico', 'trifasico'] as const).map((type) => (
                   <motion.label 
                     key={type} 
                     whileTap={{ scale: 0.95 }}
-                    className={`flex items-center justify-center p-3 rounded-xl border cursor-pointer transition-all text-sm ${
+                    className={`flex items-center justify-center p-3 rounded-xl border cursor-pointer transition-all text-xs font-mono uppercase tracking-wider ${
                       billConfig.connectionType === type 
-                        ? 'border-br-blue bg-br-blue/10 text-br-blue font-bold ring-1 ring-br-blue shadow-sm' 
-                        : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                        ? 'border-cyan-500 bg-cyan-950/60 text-cyan-300 font-bold shadow-[0_0_15px_rgba(6,182,212,0.25)] ring-1 ring-cyan-500' 
+                        : 'border-slate-800 bg-[#070b13] text-slate-400 hover:border-slate-700 hover:text-slate-200'
                     }`}
                   >
                     <input 
@@ -96,155 +107,159 @@ export default function BillEstimate({ appliances, billConfig, setBillConfig, to
                   </motion.label>
                 ))}
               </div>
-              <p className="text-xs text-slate-500 mt-2">Define o custo de disponibilidade (mínimo faturável).</p>
+              <p className="text-[11px] font-mono text-slate-500 mt-2">Custo de disponibilidade regulatório.</p>
             </div>
 
             {!billConfig.isLowIncome && (
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Tarifa de Energia (R$/kWh)
+                <label className="block text-xs font-mono text-slate-300 mb-2 uppercase">
+                  Tarifa de Energia Homologada (R$/kWh)
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">R$</span>
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400 font-mono font-bold">R$</span>
                   <input 
                     type="number" 
                     step="0.01"
                     value={billConfig.tariff}
                     onChange={e => setBillConfig({ ...billConfig, tariff: Number(e.target.value) })}
-                    className="w-full rounded-xl border-slate-300 border py-3 pl-10 pr-4 text-slate-800 bg-white focus:ring-2 focus:ring-br-blue outline-none transition-shadow text-lg font-semibold"
+                    className="w-full rounded-xl border-slate-800 border py-3 pl-11 pr-4 text-white bg-[#070b13] focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none transition-shadow text-base font-mono font-bold"
                   />
                 </div>
-                <p className="text-xs text-slate-500 mt-2">Valor cobrado pela distribuidora por cada kWh consumido.</p>
+                <p className="text-[11px] font-mono text-slate-500 mt-2">Tarifa da concessionária por quilowatt-hora consumido.</p>
               </div>
             )}
 
             {billConfig.isLowIncome && (
-              <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-                <p className="text-sm text-emerald-800">
-                  <strong>Regra Tarifa Social:</strong> Os primeiros 80 kWh são gratuitos (100% de desconto). O consumo acima de 80 kWh será cobrado com a tarifa normal.
+              <div className="p-4 bg-emerald-950/40 rounded-2xl border border-emerald-500/30">
+                <p className="text-xs text-emerald-300 font-mono leading-relaxed">
+                  <strong className="text-white uppercase font-bold">Regra TSEE Ativa:</strong> Primeiros 80 kWh isentos de tarifa base (100% de subsídio). O excedente será faturado na tarifa convencional.
                 </p>
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Bandeira Tarifária Atual
+              <label className="block text-xs font-mono text-slate-300 mb-2 uppercase">
+                Bandeira Tarifária Aneel
               </label>
-              <div className="grid grid-cols-1 gap-2">
-                {(Object.entries(TARIFF_FLAGS) as [TariffFlag, typeof TARIFF_FLAGS[TariffFlag]][]).map(([key, flag]) => (
-                  <motion.label 
-                    key={key} 
-                    whileTap={{ scale: 0.98 }}
-                    className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
-                      billConfig.flag === key 
-                        ? `border-${getFlagColorName(flag.color)}-500 ${flag.bg} ring-1 ring-${getFlagColorName(flag.color)}-500` 
-                        : 'border-slate-200 hover:bg-slate-50'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <input 
-                        type="radio" 
-                        name="tariffFlag" 
-                        value={key}
-                        checked={billConfig.flag === key}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setBillConfig({ ...billConfig, flag: key as TariffFlag });
-                          }
-                        }}
-                        className="w-5 h-5 text-br-blue focus:ring-br-blue border-slate-300"
-                      />
-                      <span className={`font-medium ${billConfig.flag === key ? flag.color : 'text-slate-700'}`}>
-                        {flag.label}
-                      </span>
-                    </div>
-                    {flag.extraPer100kWh > 0 && (
-                      <span className="text-xs font-medium text-slate-500 bg-white px-2 py-1 rounded-md shadow-sm border border-slate-100 whitespace-nowrap">
-                        + {formatCurrency(flag.extraPer100kWh)}
-                      </span>
-                    )}
-                  </motion.label>
-                ))}
+              <div className="grid grid-cols-1 gap-2.5">
+                {(Object.entries(TARIFF_FLAGS) as [TariffFlag, typeof TARIFF_FLAGS[TariffFlag]][]).map(([key, flag]) => {
+                  const isSelected = billConfig.flag === key;
+                  return (
+                    <motion.label 
+                      key={key} 
+                      whileTap={{ scale: 0.98 }}
+                      className={`flex items-center justify-between p-3.5 rounded-xl border cursor-pointer transition-all ${
+                        isSelected 
+                          ? 'border-cyan-500/80 bg-cyan-950/40 ring-1 ring-cyan-500/50 shadow-md' 
+                          : 'border-slate-800 bg-[#070b13] hover:border-slate-700'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <input 
+                          type="radio" 
+                          name="tariffFlag" 
+                          value={key}
+                          checked={isSelected}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setBillConfig({ ...billConfig, flag: key as TariffFlag });
+                            }
+                          }}
+                          className="w-4 h-4 text-cyan-500 bg-slate-900 border-slate-700 focus:ring-cyan-400"
+                        />
+                        <span className={`text-xs font-mono font-bold ${isSelected ? 'text-white' : 'text-slate-300'}`}>
+                          {flag.label}
+                        </span>
+                      </div>
+                      {flag.extraPer100kWh > 0 && (
+                        <span className="text-[11px] font-mono font-bold text-amber-400 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/30 whitespace-nowrap">
+                          + {formatCurrency(flag.extraPer100kWh)} / 100kWh
+                        </span>
+                      )}
+                    </motion.label>
+                  );
+                })}
               </div>
             </div>
           </div>
         </motion.div>
 
-        {/* Bill Breakdown */}
+        {/* Bill Breakdown Terminal */}
         <motion.div 
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           className="flex flex-col justify-start"
         >
-          <div className="bg-gradient-to-br from-br-blue to-[#001c54] rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden border-2 border-br-yellow/20">
-            {/* Decorative background elements */}
-            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-br-green opacity-20 rounded-full blur-2xl"></div>
-            <div className="absolute bottom-0 left-0 -mb-4 -ml-4 w-40 h-40 bg-br-yellow opacity-10 rounded-full blur-2xl"></div>
+          <div className="bg-gradient-to-b from-[#0e172a] to-[#070b13] rounded-3xl p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden border border-cyan-500/30">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
             
-            <h3 className="text-br-yellow/80 font-bold mb-1 relative z-10 text-sm uppercase tracking-wide">Valor Estimado da Conta</h3>
-            <div className="text-4xl sm:text-5xl font-black tracking-tight mb-8 relative z-10 text-white drop-shadow-md">
+            <div className="flex items-center justify-between mb-2 relative z-10">
+              <h3 className="text-cyan-400 font-mono text-xs uppercase tracking-widest font-bold">Projeção Consolidada</h3>
+              <span className="text-[10px] font-mono text-slate-500 border border-slate-800 px-2 py-0.5 rounded">MÊS CORRENTE</span>
+            </div>
+
+            <div className="text-4xl sm:text-5xl font-black font-mono tracking-tight mb-8 relative z-10 text-white drop-shadow-[0_0_20px_rgba(6,182,212,0.3)]">
               {formatCurrency(bill.total)}
             </div>
 
-            <div className="space-y-4 relative z-10 font-medium">
-              <div className="flex justify-between items-center pb-4 border-b border-white/10">
-                <span className="text-slate-300">Consumo Faturado</span>
-                <span className="font-bold text-lg flex items-center gap-1 text-white">
-                  <Zap className="w-4 h-4 text-br-yellow" />
+            <div className="space-y-4 relative z-10 font-mono text-sm">
+              <div className="flex justify-between items-center pb-4 border-b border-slate-800">
+                <span className="text-slate-400">Consumo Faturado</span>
+                <span className="font-bold text-lg flex items-center gap-1.5 text-cyan-400">
+                  <Zap className="w-4 h-4 text-cyan-400" />
                   {formatNumber(bill.billedConsumption, 1)} kWh
                 </span>
               </div>
               
               {bill.billedConsumption > totalConsumption && (
-                <div className="flex flex-col sm:flex-row justify-between sm:items-center text-xs text-slate-400 mt-1 mb-2 gap-1">
+                <div className="flex flex-col sm:flex-row justify-between sm:items-center text-[11px] text-amber-400/80 mt-1 mb-2 gap-1 bg-amber-950/20 p-2 rounded-lg border border-amber-500/20">
                   <span>Consumo Medido: {formatNumber(totalConsumption, 1)} kWh</span>
-                  <span>(Custo de Disponibilidade)</span>
+                  <span>(Ajuste: Custo Disponibilidade)</span>
                 </div>
               )}
               
               {billConfig.isLowIncome && (
-                <div className="flex justify-between items-center text-sm text-br-green">
-                  <span>Desconto Tarifa Social</span>
+                <div className="flex justify-between items-center text-xs text-emerald-400 bg-emerald-950/30 p-2.5 rounded-xl border border-emerald-500/30">
+                  <span>Desconto Tarifa Social (TSEE)</span>
                   <span className="font-bold">- {formatCurrency(bill.discount)}</span>
                 </div>
               )}
 
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-slate-300">
-                  Custo Base
-                </span>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-slate-400">Fornecimento de Energia (Base)</span>
                 <span className="font-semibold text-white">{formatCurrency(bill.base)}</span>
               </div>
               
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-slate-300 flex items-center gap-1.5">
-                  Acréscimo Bandeira
-                  {bill.extra > 0 && <AlertTriangle className="w-3 h-3 text-br-yellow" />}
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-slate-400 flex items-center gap-1.5">
+                  Adicional de Bandeira
+                  {bill.extra > 0 && <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />}
                 </span>
-                <span className={`font-bold ${bill.extra > 0 ? 'text-br-yellow' : 'text-br-green'}`}>
+                <span className={`font-bold ${bill.extra > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
                   {bill.extra > 0 ? '+' : ''}{formatCurrency(bill.extra)}
                 </span>
               </div>
 
-              <div className="pt-3 mt-3 border-t border-white/10 space-y-2">
-                <p className="text-xs text-white/50 font-bold uppercase tracking-wider mb-2">Tributos</p>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-slate-300">ICMS (23%)</span>
-                  <span className="font-semibold text-rose-300">+{formatCurrency(bill.icms)}</span>
+              <div className="pt-4 mt-4 border-t border-slate-800/80 space-y-2">
+                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-2">Tributos Regulatórios Estaduais & Federais</p>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-slate-400">ICMS Estadual (23%)</span>
+                  <span className="font-semibold text-rose-400">+{formatCurrency(bill.icms)}</span>
                 </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-slate-300">PIS/COFINS</span>
-                  <span className="font-semibold text-rose-300">+{formatCurrency(bill.pis + bill.cofins)}</span>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-slate-400">PIS / COFINS Federal</span>
+                  <span className="font-semibold text-rose-400">+{formatCurrency(bill.pis + bill.cofins)}</span>
                 </div>
               </div>
             </div>
           </div>
           
-          <p className="text-xs text-slate-400 text-center mt-4 px-4 leading-relaxed">
-            * O valor estimado é calculado como: (Consumo Faturado × Tarifa) + Tributos (ICMS, PIS e COFINS).
+          <p className="text-[11px] font-mono text-slate-500 text-center mt-4 px-4 leading-relaxed">
+            * O cálculo consolida: (Consumo Faturado &times; Tarifa Homologada) + Adicionais de Bandeira + Carga Tributária (ICMS + PIS/COFINS).
           </p>
         </motion.div>
       </div>
     </div>
   );
 }
+

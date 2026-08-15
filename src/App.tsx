@@ -4,7 +4,7 @@
  */
 
 import { useState, useRef } from 'react';
-import { Calculator, PieChart, Lightbulb, Zap, Settings, TrendingDown, Moon, Sun, Download, Loader2, Trophy, Star } from 'lucide-react';
+import { Calculator, PieChart, Lightbulb, Zap, TrendingDown, Download, Loader2, Cpu, Activity, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Appliance, BillConfig, TariffFlag } from './types';
 import { COMMON_APPLIANCES, TARIFF_FLAGS } from './constants';
@@ -87,20 +87,20 @@ export default function App() {
 
   const tabs = [
     { id: 'simulador', label: 'Aparelhos', icon: <Calculator className="w-5 h-5" /> },
-    { id: 'conta', label: 'Estimativa', icon: <Zap className="w-5 h-5" /> },
-    { id: 'grafico', label: 'Gráfico', icon: <PieChart className="w-5 h-5" /> },
-    { id: 'dicas', label: 'Dicas', icon: <Lightbulb className="w-5 h-5" /> },
+    { id: 'conta', label: 'Estimativa & Fatura', icon: <Zap className="w-5 h-5" /> },
+    { id: 'grafico', label: 'Análise de Consumo', icon: <PieChart className="w-5 h-5" /> },
+    { id: 'dicas', label: 'Otimização IA', icon: <Lightbulb className="w-5 h-5" /> },
     { id: 'rapido', label: 'Estimativa Rápida', icon: <TrendingDown className="w-5 h-5" /> },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans relative overflow-x-hidden pb-10">
-      {/* Banner Comemorativo Copa do Mundo */}
-      <div className="bg-br-blue text-white text-center py-2 text-xs sm:text-sm font-semibold tracking-wider flex items-center justify-center gap-2 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
-        <Trophy className="w-4 h-4 text-br-yellow animate-pulse" />
-        <span>EnerControl na Torcida do Brasil 🇧🇷 Copa do Mundo</span>
-        <Star className="w-4 h-4 text-br-yellow" fill="currentColor" />
+    <div className="min-h-screen bg-[#070b13] text-slate-100 font-sans relative overflow-x-hidden pb-10 selection:bg-cyan-500 selection:text-black">
+      {/* Futuristic Background Ambient Glows & Grid Pattern */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/3 right-10 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 left-1/3 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
       </div>
 
       {/* Hidden Report Template for PDF Generation */}
@@ -115,68 +115,86 @@ export default function App() {
         />
       </div>
 
-      <header className="bg-gradient-to-r from-br-green to-[#007A2E] text-white shadow-lg z-50 relative overflow-hidden border-b-4 border-br-yellow">
-        {/* Padrão geométrico suave no fundo do header */}
-        <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgMGwyMCAyME0yMCAwbC0yMCAyMCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiLz48L3N2Zz4=')]"></div>
-        
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6 relative z-10">
+      {/* Futuristic Top Bar / Header */}
+      <header className="bg-[#0b111e]/90 backdrop-blur-xl border-b border-cyan-500/20 shadow-lg shadow-cyan-950/40 z-50 relative">
+        <div className="max-w-7xl mx-auto px-4 py-4 sm:py-5 relative z-10">
           <div className="flex items-center justify-between">
             <button 
               onClick={() => setActiveTab('simulador')}
-              className="flex items-center gap-2 sm:gap-3 hover:opacity-90 transition-all focus:outline-none text-left group"
+              className="flex items-center gap-3 sm:gap-4 hover:opacity-95 transition-all focus:outline-none text-left group"
             >
-              <div className="relative flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl backdrop-blur-sm border border-white/30 group-hover:bg-white/30 transition-colors shadow-inner">
-                <Zap className="w-6 h-6 sm:w-7 sm:h-7 text-br-yellow" fill="currentColor" />
-                <Star className="w-3 h-3 text-br-yellow absolute -right-1 -top-1 animate-bounce" fill="currentColor" />
+              <div className="relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 bg-gradient-to-br from-cyan-500/20 to-indigo-500/20 rounded-2xl backdrop-blur-md border border-cyan-500/40 group-hover:border-cyan-400 transition-all shadow-[0_0_20px_rgba(6,182,212,0.25)]">
+                <Zap className="w-6 h-6 text-cyan-400 group-hover:scale-110 transition-transform" />
+                <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 rounded-full ring-4 ring-[#0b111e] animate-pulse"></div>
               </div>
               <div className="flex flex-col">
-                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white drop-shadow-md flex items-center gap-1">
-                  EnerControl
-                </h1>
-                <span className="text-[10px] sm:text-xs text-br-yellow font-bold tracking-widest uppercase">Equatorial Energia</span>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-1">
+                    Ener<span className="text-cyan-400">Control</span>
+                  </h1>
+                  <span className="hidden sm:inline-block px-2 py-0.5 text-[10px] font-mono font-bold bg-cyan-950/80 text-cyan-400 border border-cyan-500/30 rounded-md tracking-wider">
+                    v2.5
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] sm:text-xs text-slate-400 font-mono tracking-wider uppercase flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                    Equatorial Energia Grid
+                  </span>
+                </div>
               </div>
             </button>
-            <div className="flex items-center gap-3">
+
+            <div className="flex items-center gap-3 sm:gap-4">
+              {/* Online telemetry indicator */}
+              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/80 border border-slate-800 text-xs font-mono text-slate-300">
+                <Activity className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+                <span className="text-slate-400">TELEMETRIA:</span>
+                <span className="text-emerald-400 font-semibold">ATIVA</span>
+              </div>
+
               <button 
                 onClick={handleGeneratePDF}
                 disabled={isGeneratingPDF}
-                className="flex items-center gap-2 bg-br-yellow text-br-blue hover:bg-[#FFE533] disabled:bg-[#FFE533]/70 disabled:cursor-not-allowed px-4 py-2 sm:px-5 sm:py-2.5 rounded-full transition-all text-sm font-bold shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                className="flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all text-xs sm:text-sm font-bold shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] transform hover:-translate-y-0.5 active:translate-y-0"
               >
-                {isGeneratingPDF ? <Loader2 className="w-4 h-4 animate-spin text-br-blue" /> : <Download className="w-4 h-4 text-br-blue" />}
-                <span className="hidden sm:inline">{isGeneratingPDF ? 'Gerando...' : 'Gerar Relatório'}</span>
+                {isGeneratingPDF ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                <span className="hidden sm:inline">{isGeneratingPDF ? 'PROCESSANDO...' : 'EXPORTAR RELATÓRIO'}</span>
+                <span className="sm:hidden">{isGeneratingPDF ? '...' : 'PDF'}</span>
               </button>
-              <div className="lg:hidden flex items-center gap-2 bg-br-blue/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-inner text-br-yellow">
-                <span className="text-sm font-bold">{formatCurrency(bill.total)}</span>
+
+              <div className="lg:hidden flex items-center gap-2 bg-slate-900/90 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-cyan-500/30 text-cyan-400 shadow-inner">
+                <span className="text-xs font-mono font-bold">{formatCurrency(bill.total)}</span>
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-6 sm:py-8">
+      <main className="max-w-7xl mx-auto px-4 py-6 sm:py-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
           
           {/* Sidebar Navigation */}
           <div className="lg:col-span-3">
             <nav 
-              className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0 no-scrollbar sticky top-0 lg:top-auto bg-slate-50 lg:bg-transparent z-40 pt-2 lg:pt-0"
+              className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0 no-scrollbar sticky top-0 lg:top-auto bg-[#070b13]/80 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none z-40 pt-2 lg:pt-0"
               aria-label="Navegação principal"
             >
               {tabs.map((tab) => (
                 <motion.button
                   key={tab.id}
                   whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => setActiveTab(tab.id as Tab)}
                   aria-label={`Aba ${tab.label}`}
                   aria-current={activeTab === tab.id ? 'page' : undefined}
-                  className={`flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:py-3 rounded-xl transition-all whitespace-nowrap text-sm sm:text-base font-medium ${
+                  className={`flex items-center gap-2.5 sm:gap-3.5 px-4 py-3 rounded-2xl transition-all whitespace-nowrap text-sm font-medium ${
                     activeTab === tab.id
-                      ? 'bg-br-blue text-white shadow-lg shadow-br-blue/20 ring-2 ring-br-yellow ring-offset-2'
-                      : `bg-white lg:bg-transparent text-slate-600 hover:bg-slate-100 hover:text-br-blue border border-slate-200 lg:border-0`
+                      ? 'bg-gradient-to-r from-cyan-500/20 via-indigo-500/15 to-transparent text-cyan-300 font-semibold border-l-4 border-cyan-400 shadow-lg shadow-cyan-950/30 ring-1 ring-cyan-500/30'
+                      : `bg-slate-900/60 lg:bg-slate-900/40 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-slate-800/80`
                   }`}
                 >
-                  <span className={`${activeTab === tab.id ? 'text-br-yellow' : 'text-slate-400'}`}>
+                  <span className={`${activeTab === tab.id ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.6)]' : 'text-slate-500'}`}>
                     {tab.icon}
                   </span>
                   {tab.label}
@@ -184,56 +202,68 @@ export default function App() {
               ))}
             </nav>
 
-            {/* Summary Card */}
-            <div className="mt-8 bg-white rounded-2xl p-6 shadow-md border border-slate-200 hidden lg:block relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-br-green/10 to-br-yellow/10 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
-              <h3 className="text-sm font-bold text-br-blue uppercase tracking-wider mb-5 flex items-center gap-2">
-                <PieChart className="w-4 h-4 text-br-green" />
-                Resumo Mensal
-              </h3>
-              <div className="space-y-5">
+            {/* Futuristic HUD Resumo Mensal */}
+            <div className="mt-6 bg-[#0d1424]/80 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-cyan-500/20 hidden lg:block relative overflow-hidden group">
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-cyan-500/20 transition-all"></div>
+              <div className="flex items-center justify-between mb-5 border-b border-slate-800 pb-3">
+                <h3 className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-widest flex items-center gap-2">
+                  <Cpu className="w-4 h-4 text-cyan-400" />
+                  HUD METRICS // 01
+                </h3>
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              </div>
+              
+              <div className="space-y-4">
                 <div>
-                  <p className="text-sm text-slate-500 font-medium mb-1">Consumo Total</p>
-                  <p className="text-2xl font-black text-slate-800">{totalConsumption.toFixed(0)} <span className="text-base font-semibold text-slate-500">kWh</span></p>
+                  <p className="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1">Consumo Total</p>
+                  <p className="text-3xl font-black text-white tracking-tight flex items-baseline gap-1.5">
+                    {totalConsumption.toFixed(0)} <span className="text-sm font-mono text-cyan-400 font-normal">kWh/mês</span>
+                  </p>
                 </div>
-                <div className="pt-4 border-t border-slate-100">
-                  <p className="text-sm text-slate-500 font-medium mb-1">Valor Estimado</p>
-                  <p className="text-3xl font-black text-br-green drop-shadow-sm">{formatCurrency(bill.total)}</p>
+
+                <div className="pt-3 border-t border-slate-800">
+                  <p className="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1">Custo Estimado</p>
+                  <p className="text-3xl font-black text-emerald-400 tracking-tight drop-shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                    {formatCurrency(bill.total)}
+                  </p>
                 </div>
+
                 <div className="pt-2">
-                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border ${TARIFF_FLAGS[billConfig.flag]?.bg || 'bg-slate-100'} ${TARIFF_FLAGS[billConfig.flag]?.color || 'text-slate-600'} border-current/20 shadow-sm`}>
+                  <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-mono font-bold border ${TARIFF_FLAGS[billConfig.flag]?.bg || 'bg-slate-800'} ${TARIFF_FLAGS[billConfig.flag]?.color || 'text-slate-300'} border-current/30 shadow-sm`}>
+                    <span className="w-2 h-2 rounded-full bg-current animate-ping"></span>
                     {TARIFF_FLAGS[billConfig.flag]?.label || 'Bandeira Desconhecida'}
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Quick Estimate CTA */}
+            {/* Quick Estimate CTA Button */}
             <div className="mt-4 hidden lg:block">
               <motion.button
                 whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.95 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => setActiveTab('rapido')}
                 aria-label="Acessar Estimativa Rápida"
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-br-green to-[#008A34] hover:from-[#008A34] hover:to-br-green text-white px-5 py-3.5 rounded-xl font-bold transition-all shadow-md hover:shadow-lg border border-[#007A2E]"
+                className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-slate-900 to-slate-800 hover:from-cyan-950/40 hover:to-indigo-950/40 text-cyan-300 hover:text-cyan-200 px-5 py-3.5 rounded-2xl font-bold transition-all shadow-lg border border-cyan-500/30 hover:border-cyan-400/60 group"
               >
-                <TrendingDown className="w-5 h-5 text-br-yellow" />
-                Estimativa Rápida
+                <TrendingDown className="w-5 h-5 text-cyan-400 group-hover:scale-110 transition-transform" />
+                <span className="text-sm tracking-wide">Estimativa Rápida</span>
               </motion.button>
             </div>
           </div>
 
           {/* Main Content Area */}
           <div className="lg:col-span-9">
-            <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200 min-h-[600px] overflow-hidden relative">
-              {/* Subtle top accent line */}
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-br-green via-br-yellow to-br-blue"></div>
+            <div className="bg-[#0d1424]/90 backdrop-blur-2xl rounded-3xl shadow-2xl shadow-cyan-950/20 border border-slate-800/90 min-h-[600px] overflow-hidden relative">
+              {/* Futuristic Top Glowing Laser Accent */}
+              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-cyan-400 via-indigo-500 to-emerald-400 shadow-[0_0_12px_rgba(6,182,212,0.8)]"></div>
+              
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTab}
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
+                  exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.2 }}
                   className="h-full"
                 >
@@ -272,28 +302,30 @@ export default function App() {
         </div>
       </main>
 
-      <footer className="max-w-7xl mx-auto px-4 pt-12 pb-8 text-center text-sm font-medium text-slate-500">
+      <footer className="max-w-7xl mx-auto px-4 pt-12 pb-8 text-center text-xs font-mono text-slate-500 relative z-10">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-6">
           <button 
             onClick={() => setActiveTab('privacidade')}
-            className="text-br-blue hover:text-br-green transition-colors font-semibold"
+            className="text-slate-400 hover:text-cyan-400 transition-colors uppercase tracking-wider flex items-center gap-1.5"
           >
+            <ShieldCheck className="w-3.5 h-3.5 text-cyan-500" />
             Política de Privacidade
           </button>
+          <span className="hidden sm:inline text-slate-700">&bull;</span>
           <button 
             onClick={() => setActiveTab('licenca')}
-            className="text-br-blue hover:text-br-green transition-colors font-semibold"
+            className="text-slate-400 hover:text-cyan-400 transition-colors uppercase tracking-wider"
           >
             Termos de Uso (EULA)
           </button>
         </div>
-        <div className="flex items-center justify-center gap-2 mb-2">
-           <span className="w-1.5 h-1.5 rounded-full bg-br-green"></span>
-           <span className="w-1.5 h-1.5 rounded-full bg-br-yellow"></span>
-           <span className="w-1.5 h-1.5 rounded-full bg-br-blue"></span>
+        <div className="flex items-center justify-center gap-2 mb-3 opacity-60">
+           <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+           <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
         </div>
-        <div className="tracking-wide">
-          <span className="opacity-70">Desenvolvido por</span> <a href="https://github.com/Rahonne08" target="_blank" rel="noopener noreferrer" className="text-slate-700 hover:text-br-green font-bold transition-colors">Pablo Rahonne</a> <span className="opacity-70">&bull; Equatorial Energia</span>
+        <div className="tracking-widest uppercase">
+          <span className="text-slate-600">Desenvolvido por</span> <a href="https://github.com/Rahonne08" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 font-bold transition-colors">Pablo Rahonne</a> <span className="text-slate-600">&bull; Equatorial Energia</span>
         </div>
       </footer>
     </div>
